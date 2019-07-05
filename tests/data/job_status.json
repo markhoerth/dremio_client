@@ -1,0 +1,13 @@
+{
+    "jobState": "COMPLETED",
+    "rowCount": 100,
+    "errorMessage": "",
+    "startedAt": "2019-08-08T16:17:05.170Z",
+    "endedAt": "2019-08-08T16:17:05.224Z",
+    "queryType": "REST",
+    "queueName": "Low Cost User Queries",
+    "queueId": "8b6ea347-bcaf-4cbd-8579-8a9001deed66",
+    "resourceSchedulingStartedAt": "2019-08-08T16:17:05.189Z",
+    "resourceSchedulingEndedAt": "2019-08-08T16:17:05.206Z",
+    "cancellationReason": ""
+}

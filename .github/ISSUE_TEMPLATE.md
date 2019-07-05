@@ -1,4 +1,5 @@
 * Dremio client version:
+* Dremio version:
 * Python version:
 * Operating System:
 

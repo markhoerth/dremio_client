@@ -1,29 +1,44 @@
-# Config file for automatic testing at travis-ci.org
-
 language: python
 python:
-  - 3.6
-  - 3.5
-  - 3.4
-  - 2.7
-
-# Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -U tox-travis
-
-# Command to run tests, e.g. python setup.py test
+    - 3.8
+    - 3.7
+    - 3.6
+    - 3.5
+    - 2.7
+env:
+    matrix:
+        - CODECOV_TOKEN=bebb1336-846a-4e5a-a511-b3b6faa0f99b
+    global:
+        secure: HcSLDhPy1gOymRFeVb5tfuhrDrstUJCO4SdFRkDA4twNlzOottYxT6F0DBwI/rlewQyLz84PjVxcWq4QlEgc7KLmSPP1CzCKU6hyqZ/mtHWoW3Ivw1q3YG0LmMDPeX+w6WBzEpTWq+EOWeeFjTFDrCCjgxeDbhhqWUjKqygoXaMeyn9OJdJZ39dJYWHf0ednpg1QRb6gJef18eyzDr3ybKFYdaEHvm4AMRdxnp9PflDCoW0Ejz6rqHm+tLxN6cxbH4XA6jDNe5hknuETBRB91qmKuZPEEcYIZT5SNQ9SCvKSGyXlfUudhQm2mH4NSG/GqTNTIfABt+yhVMHKUbkINZ+ZgcQ3APgzsPYTzKqsYs4EoYX4Vpd8bWm6rQI83l0LMo1u6fKmJVIEEASn5Ok4A5iNkpo0LVpwSe13QpegTJdJU2oGZwpA4xG8zMSMl1BU4E9kQjpnG3619RQdycCbjs/VbyZF1o7LUMDWtdp69uKIqxokaXG+HoFq/ZKnU6LfHRBG8/DcxgcPp8+Nqi7Z9UYaFy6E98btDblq35bj5NGPpqAWRJZb1XNLHpzSC+UxQ5yIxQibYU7nUvp43vU0Y7SLnbSZK+jM3mRFNTXP6tLM+dUN3E1XyTQse/57N5WuN6yhJiZZxJ1P4AJUEY4e86Pocjd1MLU6goiaAPzKOdo=
+before_install:
+    - sudo apt-get update
+    - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+        -O miniconda.sh; else wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+        -O miniconda.sh; fi
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - source "$HOME/miniconda/etc/profile.d/conda.sh"
+    - hash -r
+    - conda config --set always_yes yes --set changeps1 no
+    - conda update -q conda
+    - conda info -a
+    - conda install -y conda-build conda-verify anaconda-client
+    - conda config --set anaconda_upload no
+install:
+    - pip install -U tox-travis
 script: tox
-
-# Assuming you have installed the travis-ci CLI tool, after you
-# create the Github repo and add it to Travis, run the
-# following command to finish PyPI deployment setup:
-# $ travis encrypt --add deploy.password
+#before_deploy:
+#    - conda build --quiet --no-test --output-folder conda_build conda.recipe -c conda-forge
+#    - conda convert --platform win-64 conda_build/linux-64/*.tar.bz2 -o conda_build/
+#    - conda convert --platform osx-64 conda_build/linux-64/*.tar.bz2 -o conda_build/
+#    - ls conda_build/*/*.tar.bz2 | xargs -I {} anaconda -v -t $ANACONDA_TOKEN upload {}
 deploy:
-  provider: pypi
-  distributions: sdist bdist_wheel
-  user: rymurr
-  password:
-    secure: PLEASE_REPLACE_ME
-  on:
-    tags: true
-    repo: rymurr/dremio_client
-    python: 3.6
+    provider: pypi
+    distributions: sdist bdist_wheel
+    user: rymurr
+    password:
+        secure: pk/5Mk2Gh/A1n/TcvGsArxOO8D11cbAfPfATxuRV/gJyhgPiQZ/r6kIgnGOitixp2SJ4G6bxlDBR50/UxZqtJF7AJcOW30E+dakUNNml1JJMoyqV/fa0wvzahv6Ti9Icvs4RUHjPIX8mgQsuGMl3MUrYSz/Eres8OFk3D+Nxma00LnjUZU5xd0SVKoW3ya+QEYbFLqWdF9KDMWzEYsinaEv/g4t9yUbqGclWvqNWGSZtvmGMdajVW5wXdhKrupOvI9pVAnD5ogWpRx16NGV9dk1dCPI1Yx+/cMVkeKJzK30UOLGV13RKr7cz9vZloUVeKWxqd/B165TI2kuI8w2HLgXwxYOk8mKuQg8qHemtk7Jz6cjYzFIg2DxSeSkPpu2HJBIBhYxW/j+5TImsm0ftOjIwxP2VV/+hHkPLNwK+0LyD/VCK2aBwsYblL8a5zWZObtVSP9P43zjXRYfaj4XBtTklGSTGxrCP2LXiSYRrlYtiXPO8ZkJre23gb4JedwfPnHry/8cMB98B6N86slqjkR18nE56LUx7wQsMjaVomLo5g4Pe+ipPfyPcdswHpHFKS3Wa8mstZtjLZappj7bdEJZ1KNU+SEoWzwsikXAMSZDhXaNsNVCJhrU23D6zT71V8Grdgj1zFofhYYv0ocxA8yT3j/kWYbSXwT7jf9XUMrE=
+    skip_existing: true
+    skip_cleanup: true
+    on:
+        tags: true
+        repo: rymurr/dremio_client

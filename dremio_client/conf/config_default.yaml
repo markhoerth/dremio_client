@@ -1,0 +1,13 @@
+auth:
+    type: basic
+    username: dremio
+    password: dremio123
+    timeout: 10
+hostname: localhost
+port: 9047
+ssl: false
+verify: true
+odbc:
+    port: 31010
+flight:
+    port: 47470

@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Ryan Murray <rymurr@dremio.com>
+* Ryan Murray <rymurr@gmail.com>
 
 Contributors
 ------------

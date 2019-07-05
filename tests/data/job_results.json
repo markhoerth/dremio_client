@@ -1,0 +1,14 @@
+{
+    "rowCount": 100,
+    "schema": [
+        {
+            "name": "name",
+            "type": {
+                "name": "VARCHAR"
+            }
+        }
+    ],
+    "rows": [
+
+    ]
+}

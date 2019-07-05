@@ -1,0 +1,24 @@
+{
+    "entityType": "dataset",
+    "id": "59b5eabd-1c23-4e43-9be7-792ce3e84d0e",
+    "type": "PHYSICAL_DATASET",
+    "path": [
+        "testsource",
+        "profiles"
+    ],
+    "createdAt": "2019-04-26T04:10:20.514Z",
+    "tag": "10",
+    "format": {
+        "type": "JSON",
+        "ctime": 0,
+        "isFolder": true,
+        "location": "/profiles"
+    },
+    "accessControlList": {
+        "version": "0"
+    },
+    "fields": [
+
+    ],
+    "approximateStatisticsAllowed": false
+}

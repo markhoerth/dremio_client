@@ -1,5 +1,5 @@
 Welcome to Dremio client's documentation!
-======================================
+=========================================
 
 .. toctree::
    :maxdepth: 2
@@ -8,6 +8,8 @@ Welcome to Dremio client's documentation!
    readme
    installation
    usage
+   utils
+   command_line_interface
    modules
    contributing
    authors

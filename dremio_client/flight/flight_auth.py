@@ -1,0 +1,40 @@
+#
+# Copyright (c) 2019 Ryan Murray.
+#
+# This file is part of Dremio Client
+# (see https://github.com/rymurr/dremio_client).
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+from pyarrow.flight import ClientAuthHandler, BasicAuth
+
+
+class HttpDremioClientAuthHandler(ClientAuthHandler):
+
+    def __init__(self, username, password):
+        super(ClientAuthHandler, self).__init__()
+        self.basic_auth = BasicAuth(username, password)
+        self.token = None
+
+    def authenticate(self, outgoing, incoming):
+        auth = self.basic_auth.serialize()
+        outgoing.write(auth)
+        self.token = incoming.read()
+
+    def get_token(self):
+        return self.token

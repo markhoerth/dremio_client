@@ -1,0 +1,22 @@
+{
+    "data": [
+        {
+            "id": "921c97ee-6363-41db-8180-9d50ef718cc2",
+            "path": [
+                "nyctaxi"
+            ],
+            "tag": "0",
+            "type": "CONTAINER",
+            "containerType": "SPACE"
+        },
+        {
+            "id": "71373b4d-b284-4007-bdc1-2c4d245563ec",
+            "path": [
+                "testsource"
+            ],
+            "tag": "0",
+            "type": "CONTAINER",
+            "containerType": "SOURCE"
+        }
+    ]
+}

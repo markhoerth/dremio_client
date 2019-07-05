@@ -8,11 +8,19 @@ Installation
 Stable release
 --------------
 
-To install Dremio client, run this command in your terminal:
+To install basic Dremio client, run this command in your terminal:
 
 .. code-block:: console
 
     $ pip install dremio_client
+
+This installs a minimal set of dependencies suitable for only interacting with the REST API and for restricted environments.
+To get full set of dependencies run:
+
+.. code-block:: console
+
+    $ pip install dremio_client[noarrow]  # everything but pyarrow
+    $ pip install dremio_client[full]  # all dependencies
 
 This is the preferred method to install Dremio client, as it will always install the most recent stable release.
 
@@ -22,6 +30,14 @@ you through the process.
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
+Conda release
+-------------
+
+You can use conda to install Dremio Client by doing:
+
+.. code-block:: console
+
+    $ conda install dremio_client -c rymurr -c conda-forge
 
 From sources
 ------------

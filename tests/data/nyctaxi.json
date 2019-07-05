@@ -1,0 +1,23 @@
+{
+    "entityType": "folder",
+    "id": "352f1c4b-4772-43d5-8621-23aacd5955c3",
+    "path": [
+        "testsource",
+        "nyctaxi"
+    ],
+    "tag": "0",
+    "children": [
+        {
+            "id": "dremio:/testsource/nyctaxi/\"foo.csv\"",
+            "path": [
+                "testsource",
+                "nyctaxi",
+                "\"foo.csv\""
+            ],
+            "type": "FILE"
+        }
+    ],
+    "accessControlList": {
+        "version": "0"
+    }
+}

@@ -112,7 +112,7 @@ Tips
 To run a subset of tests::
 
 
-    $ python -m unittest tests.test_dremio_client
+    $ python -m pytest tests.test_dremio_client
 
 Deploying
 ---------
