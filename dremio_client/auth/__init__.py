@@ -30,6 +30,9 @@ import time
 from confuse import ConfigValueError, NotFoundError
 
 from .config import login as config_auth
+from .basic import login as basic_auth
+
+__all__ = ["basic_auth", "config_auth", "auth"]
 
 
 def auth(base_url, config_dict):
