@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -12,7 +13,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -23,48 +24,42 @@
 #
 import requests
 from requests.exceptions import HTTPError
-from ..error import DremioUnauthorizedException, DremioNotFoundException, DremioPermissionException, DremioException, \
-    DremioBadRequestException
+
+from ..error import (
+    DremioBadRequestException,
+    DremioException,
+    DremioNotFoundException,
+    DremioPermissionException,
+    DremioUnauthorizedException,
+)
 
 
 def _get_headers(token):
-    headers = {'Authorization': '_dremio{}'.format(
-        token), 'content-type': 'application/json'}
+    headers = {"Authorization": "_dremio{}".format(token), "content-type": "application/json"}
     return headers
 
 
-def _get(url, token, details='', ssl_verify=True):
+def _get(url, token, details="", ssl_verify=True):
     r = requests.get(url, headers=_get_headers(token), verify=ssl_verify)
     return _check_error(r, details)
 
 
-def _post(url, token, json=None, details='', ssl_verify=True):
-    r = requests.post(
-        url,
-        headers=_get_headers(token),
-        verify=ssl_verify,
-        json=json)
+def _post(url, token, json=None, details="", ssl_verify=True):
+    r = requests.post(url, headers=_get_headers(token), verify=ssl_verify, json=json)
     return _check_error(r, details)
 
 
-def _delete(url, token, details='', ssl_verify=True):
-    r = requests.delete(
-        url,
-        headers=_get_headers(token),
-        verify=ssl_verify)
+def _delete(url, token, details="", ssl_verify=True):
+    r = requests.delete(url, headers=_get_headers(token), verify=ssl_verify)
     return _check_error(r, details)
 
 
-def _put(url, token, json=None, details='', ssl_verify=True):
-    r = requests.put(
-        url,
-        headers=_get_headers(token),
-        verify=ssl_verify,
-        json=json)
+def _put(url, token, json=None, details="", ssl_verify=True):
+    r = requests.put(url, headers=_get_headers(token), verify=ssl_verify, json=json)
     return _check_error(r, details)
 
 
-def _check_error(r, details=''):
+def _check_error(r, details=""):
     error, code, _ = _raise_for_status(r)
     if not error:
         try:
@@ -80,7 +75,7 @@ def _check_error(r, details=''):
         raise DremioPermissionException("Not permissioned to view entity at " + details, error)
     if code == 404:
         raise DremioNotFoundException("No entity exists at " + details, error)
-    raise DremioException('unknown error', error)
+    raise DremioException("unknown error", error)
 
 
 def catalog_item(token, base_url, cid=None, path=None, ssl_verify=True):
@@ -97,12 +92,10 @@ def catalog_item(token, base_url, cid=None, path=None, ssl_verify=True):
     :return: json of resource
     """
     if cid is None and path is None:
-        raise TypeError(
-            "both id and path can't be None for a catalog_item call")
-    idpath = (cid if cid else '') + ', ' + ('.'.join(path) if path else '')
-    cpath = [i.replace('/', '%2F') for i in path] if path else ''
-    endpoint = '/{}'.format(cid) if cid else '/by-path/{}'.format(
-        '/'.join(cpath).replace('"', ''))
+        raise TypeError("both id and path can't be None for a catalog_item call")
+    idpath = (cid if cid else "") + ", " + (".".join(path) if path else "")
+    cpath = [i.replace("/", "%2F") for i in path] if path else ""
+    endpoint = "/{}".format(cid) if cid else "/by-path/{}".format("/".join(cpath).replace('"', ""))
     return _get(base_url + "/api/v3/catalog{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
 
 
@@ -130,9 +123,7 @@ def sql(token, base_url, query, context=None, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: job id json object
     """
-    return _post(base_url + '/api/v3/sql', token, ssl_verify=ssl_verify, json={
-        'sql': query,
-        'context': context})
+    return _post(base_url + "/api/v3/sql", token, ssl_verify=ssl_verify, json={"sql": query, "context": context})
 
 
 def job_status(token, base_url, job_id, ssl_verify=True):
@@ -146,7 +137,7 @@ def job_status(token, base_url, job_id, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: status object
     """
-    return _get(base_url + '/api/v3/job/{}'.format(job_id), token, ssl_verify=ssl_verify)
+    return _get(base_url + "/api/v3/job/{}".format(job_id), token, ssl_verify=ssl_verify)
 
 
 def job_results(token, base_url, job_id, offset=0, limit=100, ssl_verify=True):
@@ -163,13 +154,10 @@ def job_results(token, base_url, job_id, offset=0, limit=100, ssl_verify=True):
     :return: result object
     """
     return _get(
-        base_url +
-        '/api/v3/job/{}/results?offset={}&limit={}'.format(
-            job_id,
-            offset,
-            limit),
+        base_url + "/api/v3/job/{}/results?offset={}&limit={}".format(job_id, offset, limit),
         token,
-        ssl_verify=ssl_verify)
+        ssl_verify=ssl_verify,
+    )
 
 
 def reflections(token, base_url, summary=False, ssl_verify=True):
@@ -183,7 +171,7 @@ def reflections(token, base_url, summary=False, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    return _get(base_url + "/api/v3/reflection" + ('/summary' if summary else ''), token, ssl_verify=ssl_verify)
+    return _get(base_url + "/api/v3/reflection" + ("/summary" if summary else ""), token, ssl_verify=ssl_verify)
 
 
 def reflection(token, base_url, reflectionid, ssl_verify=True):
@@ -252,11 +240,9 @@ def user(token, base_url, uid=None, name=None, ssl_verify=True):
     :return: result object
     """
     if uid is None and name is None:
-        raise TypeError(
-            "both id and name can't be None for a user call")
-    idpath = (uid if uid else '') + ', ' + ('.'.join(name) if name else '')
-    endpoint = '/{}'.format(uid) if uid else '/by-name/{}'.format(
-        '/'.join(name).replace('"', ''))
+        raise TypeError("both id and name can't be None for a user call")
+    idpath = (uid if uid else "") + ", " + (".".join(name) if name else "")
+    endpoint = "/{}".format(uid) if uid else "/by-name/{}".format("/".join(name).replace('"', ""))
     return _get(base_url + "/api/v3/user{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
 
 
@@ -273,11 +259,9 @@ def group(token, base_url, gid=None, name=None, ssl_verify=True):
     :return: result object
     """
     if gid is None and name is None:
-        raise TypeError(
-            "both id and name can't be None for a user call")
-    idpath = (gid if gid else '') + ', ' + ('.'.join(name) if name else '')
-    endpoint = '/{}'.format(gid) if gid else '/by-name/{}'.format(
-        '/'.join(name).replace('"', ''))
+        raise TypeError("both id and name can't be None for a user call")
+    idpath = (gid if gid else "") + ", " + (".".join(name) if name else "")
+    endpoint = "/{}".format(gid) if gid else "/by-name/{}".format("/".join(name).replace('"', ""))
     return _get(base_url + "/api/v3/group{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
 
 
@@ -349,14 +333,13 @@ def set_collaboration_tags(token, base_url, cid, tags, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: None
     """
-    json = {'tags': tags}
+    json = {"tags": tags}
     try:
         old_tags = collaboration_tags(token, base_url, cid, ssl_verify)
-        json['version'] = old_tags['version']
+        json["version"] = old_tags["version"]
     except:  # NOQA
         pass
-    return _post(base_url + "/api/v3/catalog/{}/collaboration/tag".format(cid), token, ssl_verify=ssl_verify,
-                 json=json)
+    return _post(base_url + "/api/v3/catalog/{}/collaboration/tag".format(cid), token, ssl_verify=ssl_verify, json=json)
 
 
 def set_collaboration_wiki(token, base_url, cid, wiki, ssl_verify=True):
@@ -371,14 +354,15 @@ def set_collaboration_wiki(token, base_url, cid, wiki, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: None
     """
-    json = {'text': wiki}
+    json = {"text": wiki}
     try:
         old_wiki = collaboration_wiki(token, base_url, cid, ssl_verify)
-        json['version'] = old_wiki['version']
+        json["version"] = old_wiki["version"]
     except:  # NOQA
         pass
-    return _post(base_url + "/api/v3/catalog/{}/collaboration/wiki".format(cid), token, ssl_verify=ssl_verify,
-                 json=json)
+    return _post(
+        base_url + "/api/v3/catalog/{}/collaboration/wiki".format(cid), token, ssl_verify=ssl_verify, json=json
+    )
 
 
 def delete_catalog(token, base_url, cid, tag, ssl_verify=True):
@@ -438,8 +422,12 @@ def set_personal_access_token(token, base_url, uid, label, lifetime=24, ssl_veri
     :param ssl_verify: ignore ssl errors if False
     :return: updated catalog entity
     """
-    return _post(base_url + "/api/v3/user/{}/token".format(uid), token,
-                 {'label': label, 'lifeTime': 1000 * 60 * 60 * lifetime}, ssl_verify=ssl_verify)
+    return _post(
+        base_url + "/api/v3/user/{}/token".format(uid),
+        token,
+        {"label": label, "lifeTime": 1000 * 60 * 60 * lifetime},
+        ssl_verify=ssl_verify,
+    )
 
 
 def delete_personal_access_token(token, base_url, uid, tid=None, ssl_verify=True):
@@ -454,8 +442,9 @@ def delete_personal_access_token(token, base_url, uid, tid=None, ssl_verify=True
     :param ssl_verify: ignore ssl errors if False
     :return: updated catalog entity
     """
-    return _delete(base_url + "/api/v3/user/{}/token{}".format(uid, ('/' + tid) if tid else ''), token,
-                   ssl_verify=ssl_verify)
+    return _delete(
+        base_url + "/api/v3/user/{}/token{}".format(uid, ("/" + tid) if tid else ""), token, ssl_verify=ssl_verify
+    )
 
 
 def modify_reflection(token, base_url, reflectionid, json, ssl_verify=True):
@@ -579,20 +568,20 @@ def modify_rules(token, base_url, json, ssl_verify=True):
 def _raise_for_status(self):
     """Raises stored :class:`HTTPError`, if one occurred. Copy from requests request.raise_for_status()"""
 
-    http_error_msg = ''
+    http_error_msg = ""
     if isinstance(self.reason, bytes):
         try:
-            reason = self.reason.decode('utf-8')
+            reason = self.reason.decode("utf-8")
         except UnicodeDecodeError:
-            reason = self.reason.decode('iso-8859-1')
+            reason = self.reason.decode("iso-8859-1")
     else:
         reason = self.reason
 
     if 400 <= self.status_code < 500:
-        http_error_msg = u'%s Client Error: %s for url: %s' % (self.status_code, reason, self.url)
+        http_error_msg = u"%s Client Error: %s for url: %s" % (self.status_code, reason, self.url)
 
     elif 500 <= self.status_code < 600:
-        http_error_msg = u'%s Server Error: %s for url: %s' % (self.status_code, reason, self.url)
+        http_error_msg = u"%s Server Error: %s for url: %s" % (self.status_code, reason, self.url)
 
     if http_error_msg:
         return HTTPError(http_error_msg, response=self), self.status_code, reason

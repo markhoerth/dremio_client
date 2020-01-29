@@ -13,7 +13,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -23,33 +23,40 @@
 # under the License.
 #
 import logging
+
 import pandas as pd
+
 from .flight import query as _flight_query
-from .util import run as _rest_query
 from .odbc import query as _odbc_query
+from .util import run as _rest_query
 
 
-def query(token, base_url, hostname, odbc_port, flight_port, username, password, ssl_verify, sql, pandas=True,
-          method='flight', context=None):
+def query(
+    token,
+    base_url,
+    hostname,
+    odbc_port,
+    flight_port,
+    username,
+    password,
+    ssl_verify,
+    sql,
+    pandas=True,
+    method="flight",
+    context=None,
+):
     failed = False
-    if method == 'flight':
+    if method == "flight":
         try:
-            return _flight_query(sql,
-                                 hostname=hostname,
-                                 port=flight_port,
-                                 username=username,
-                                 password=password,
-                                 pandas=pandas)
+            return _flight_query(
+                sql, hostname=hostname, port=flight_port, username=username, password=password, pandas=pandas
+            )
         except Exception:
             logging.warning("Unable to run query as flight, downgrading to odbc")
             failed = True
-    if method == 'odbc' or failed:
+    if method == "odbc" or failed:
         try:
-            return _odbc_query(sql,
-                               hostname=hostname,
-                               port=odbc_port,
-                               username=username,
-                               password=password)
+            return _odbc_query(sql, hostname=hostname, port=odbc_port, username=username, password=password)
         except NotImplementedError:
             logging.warning("Unable to run query as odbc, downgrading to rest")
     results = _rest_query(token, base_url, sql, ssl_verify=ssl_verify)

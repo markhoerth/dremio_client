@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -12,7 +13,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -28,6 +29,6 @@ from .endpoints import catalog as _catalog
 def catalog(token, base_url, flight_endpoint, ssl_verify=True):
     cat = Root(token, base_url, flight_endpoint, ssl_verify=ssl_verify)
     data = _catalog(token, base_url, ssl_verify=ssl_verify)
-    for item in data['data']:
+    for item in data["data"]:
         cat.add(item)
     return cat

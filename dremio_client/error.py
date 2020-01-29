@@ -22,12 +22,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-
-
 class DremioException(Exception):
     """
     base dremio exception
     """
+
     def __init__(self, msg, original_exception):
         super(DremioException, self).__init__(msg + (": %s" % original_exception))
         self.original_exception = original_exception

@@ -28,13 +28,25 @@
 from .auth import auth
 from .dremio_simple_client import SimpleClient
 from .model.catalog import catalog
-from .model.data import make_reflection, make_wlm_queue, make_wlm_rule, make_vote
-from .model.endpoints import reflections, wlm_queues, wlm_rules, votes, user, group, personal_access_token
+from .model.data import (
+    make_reflection,
+    make_vote,
+    make_wlm_queue,
+    make_wlm_rule,
+)
+from .model.endpoints import (
+    group,
+    personal_access_token,
+    reflections,
+    user,
+    votes,
+    wlm_queues,
+    wlm_rules,
+)
 from .query import query
 
 
 class DremioClient(object):
-
     def __init__(self, config):
         """
         Create a Dremio Client instance. This currently only supports basic auth from the constructor.
@@ -42,17 +54,21 @@ class DremioClient(object):
 
         :param config: config dict from confuse
         """
-        port = config['port'].get(int)
-        self._hostname = config['hostname'].get()
-        self._base_url = ('https' if config['ssl'].get(bool) else 'http') + '://' + self._hostname + (
-            ':{}'.format(port) if port else '')
-        self._flight_port = config['flight']['port'].get(int)
-        self._odbc_port = config['odbc']['port'].get(int)
+        port = config["port"].get(int)
+        self._hostname = config["hostname"].get()
+        self._base_url = (
+            ("https" if config["ssl"].get(bool) else "http")
+            + "://"
+            + self._hostname
+            + (":{}".format(port) if port else "")
+        )
+        self._flight_port = config["flight"]["port"].get(int)
+        self._odbc_port = config["odbc"]["port"].get(int)
 
-        self._username = config['auth']['username'].get()
-        self._password = config['auth']['password'].get()
+        self._username = config["auth"]["username"].get()
+        self._password = config["auth"]["password"].get()
         self._token = auth(self._base_url, config)
-        self._ssl_verify = config['verify'].get(bool)
+        self._ssl_verify = config["verify"].get(bool)
         self._catalog = catalog(self._token, self._base_url, self.query, self._ssl_verify)
         self._reflections = list()
         self._wlm_queues = list()
@@ -75,7 +91,7 @@ class DremioClient(object):
 
     def _fetch_reflections(self):
         refs = reflections(self._token, self._base_url, ssl_verify=self._ssl_verify)
-        for ref in refs['data']:  # todo I think we should attach reflections to their catalog entries...
+        for ref in refs["data"]:  # todo I think we should attach reflections to their catalog entries...
             self._reflections.append(make_reflection(ref))
 
     @property
@@ -86,7 +102,7 @@ class DremioClient(object):
 
     def _fetch_wlm_queues(self):
         refs = wlm_queues(self._token, self._base_url, ssl_verify=self._ssl_verify)
-        for ref in refs['data']:  # todo I think we should attach reflections to their catalog entries...
+        for ref in refs["data"]:  # todo I think we should attach reflections to their catalog entries...
             self._wlm_queues.append(make_wlm_queue(ref))
 
     @property
@@ -97,7 +113,7 @@ class DremioClient(object):
 
     def _fetch_wlm_rules(self):
         refs = wlm_rules(self._token, self._base_url, ssl_verify=self._ssl_verify)
-        for ref in refs['rules']:  # todo I think we should attach reflections to their catalog entries...
+        for ref in refs["rules"]:  # todo I think we should attach reflections to their catalog entries...
             self._wlm_rules.append(make_wlm_rule(ref))
 
     @property
@@ -108,12 +124,23 @@ class DremioClient(object):
 
     def _fetch_votes(self):
         refs = votes(self._token, self._base_url, ssl_verify=self._ssl_verify)
-        for ref in refs['data']:  # todo I think we should attach reflections to their catalog entries...
+        for ref in refs["data"]:  # todo I think we should attach reflections to their catalog entries...
             self._votes.append(make_vote(ref))
 
-    def query(self, sql, pandas=True, method='flight'):
-        return query(self._token, self._base_url, self._hostname, self._odbc_port, self._flight_port, self._username,
-                     self._password, self._ssl_verify, sql, pandas, method)
+    def query(self, sql, pandas=True, method="flight"):
+        return query(
+            self._token,
+            self._base_url,
+            self._hostname,
+            self._odbc_port,
+            self._flight_port,
+            self._username,
+            self._password,
+            self._ssl_verify,
+            sql,
+            pandas,
+            method,
+        )
 
     def user(self, uid=None, name=None):
         """ return details for a user

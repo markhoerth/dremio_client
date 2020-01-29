@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -13,7 +15,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -23,7 +25,7 @@
 # under the License.
 #
 import sys
-import logging
+
 
 _WINDOWS_DRIVER = "Dremio Connector"
 _OSX_DRIVER = "Dremio ODBC Driver"
@@ -34,24 +36,23 @@ _DRIVER = None
 
 def _get_driver_name():
     global _DRIVER
-    if 'linux' in sys.platform:
-        if sys.maxsize > 2**32:
+    if "linux" in sys.platform:
+        if sys.maxsize > 2 ** 32:
             _DRIVER = _LINUX64_DRIVER
         else:
             _DRIVER = _LINUX32_DRIVER
-    if 'darwin' in sys.platform:
+    if "darwin" in sys.platform:
         _DRIVER = _OSX_DRIVER
-    if 'win' in sys.platform:
+    if "win" in sys.platform:
         _DRIVER = _WINDOWS_DRIVER
-    logging.debug('Using %s as the odbc driver', _DRIVER)
+    logging.debug("Using %s as the odbc driver", _DRIVER)
 
 
 try:
     import pyodbc
     import pandas
 
-    def connect(hostname='localhost', port=31010,
-                username='dremio', password='dremio123'):
+    def connect(hostname="localhost", port=31010, username="dremio", password="dremio123"):
         """
         Connect to and authenticate against Dremio's odbc server. Auth is skipped if username is None
 
@@ -62,17 +63,15 @@ try:
         :return: arrow flight client
         """
         c = pyodbc.connect(
-            "Driver={};ConnectionType=Direct;HOST={};PORT={};AuthenticationType=Plain;UID={};PWD={}".format(_DRIVER,
-                                                                                                            hostname,
-                                                                                                            port,
-                                                                                                            username,
-                                                                                                            password),
-            autocommit=True)
+            "Driver={};ConnectionType=Direct;HOST={};PORT={};AuthenticationType=Plain;UID={};PWD={}".format(
+                _DRIVER, hostname, port, username, password
+            ),
+            autocommit=True,
+        )
 
         return c
 
-    def query(sql, client=None, hostname='localhost', port=31010,
-              username='dremio', password='dremio123'):
+    def query(sql, client=None, hostname="localhost", port=31010, username="dremio", password="dremio123"):
         """
         Run an sql query against Dremio and return a pandas dataframe
 
@@ -90,7 +89,9 @@ try:
             client = connect(hostname, port, username, password)
         return pandas.read_sql(sql, client)
 
+
 except ImportError:
+
     def connect(*args, **kwargs):
         raise NotImplementedError("Python Flight bindings require Python 3 and pyarrow > 0.14.0")
 

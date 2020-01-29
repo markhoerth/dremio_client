@@ -26,34 +26,20 @@
 
 """The setup script."""
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-with open('README.rst') as readme_file:
+
+with open("README.rst") as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
+with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-requirements = [
-    'Click>=6.0',
-    'requests>=2.21.0',
-    'confuse',
-    'simplejson',
-    'attrs'
-]
+requirements = ["Click>=6.0", "requests>=2.21.0", "confuse", "simplejson", "attrs"]
 
-requirements_noarrow = [
-    "pandas>=0.24.2",
-    "requests-futures==1.0.0",
-    "markdown"
-]
+requirements_noarrow = ["pandas>=0.24.2", "requests-futures==1.0.0", "markdown"]
 
-requirements_full = [
-    "pyarrow>=0.15.0",
-    "pandas>=0.24.2",
-    "requests-futures==1.0.0",
-    "markdown"
-]
+requirements_full = ["pyarrow>=0.15.0", "pandas>=0.24.2", "requests-futures==1.0.0", "markdown"]
 
 setup_requirements = []
 
@@ -61,44 +47,47 @@ test_requirements = []
 
 setup(
     author="Ryan Murray",
-    author_email='rymurr@gmail.com',
+    author_email="rymurr@gmail.com",
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Apache Software License',
-        'Natural Language :: English',
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: Apache Software License",
+        "Natural Language :: English",
         "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
     ],
     description="Python client for Dremio. See https://dremio.com",
     install_requires=requirements,
     license="Apache Software License 2.0",
-    long_description=readme + '\n\n' + history,
+    long_description=readme + "\n\n" + history,
     include_package_data=True,
-    keywords='dremio_client',
-    name='dremio_client',
+    keywords="dremio_client",
+    name="dremio_client",
     packages=find_packages(
-        include=['dremio_client', "dremio_client.flight", 'dremio_client.auth', 'dremio_client.model',
-                 'dremio_client.util', 'dremio_client.conf']),
+        include=[
+            "dremio_client",
+            "dremio_client.flight",
+            "dremio_client.auth",
+            "dremio_client.model",
+            "dremio_client.util",
+            "dremio_client.conf",
+        ]
+    ),
     setup_requires=setup_requirements,
-    test_suite='tests',
+    test_suite="tests",
     tests_require=test_requirements,
-    url='https://github.com/rymurr/dremio_client',
-    version='0.7.0',
+    url="https://github.com/rymurr/dremio_client",
+    version="0.7.0",
     zip_safe=False,
     extras_require={
-        ':python_version == "2.7"': ['futures'],
-        'full': requirements_full,
-        'noarrow': requirements_noarrow
+        ':python_version == "2.7"': ["futures"],
+        "full": requirements_full,
+        "noarrow": requirements_noarrow,
     },
-    entry_points={
-        'console_scripts': [
-            'dremio_client=dremio_client.cli:cli',
-        ],
-    },
+    entry_points={"console_scripts": ["dremio_client=dremio_client.cli:cli"]},
 )

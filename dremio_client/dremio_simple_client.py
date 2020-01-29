@@ -13,7 +13,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -23,16 +23,41 @@
 # under the License.
 #
 from .auth import auth
-from .model.endpoints import catalog, job_results, job_status, sql, catalog_item, reflections, reflection, wlm_queues, \
-    wlm_rules, votes, user, group, personal_access_token, collaboration_tags, collaboration_wiki, update_catalog, \
-    delete_catalog, set_catalog, refresh_pds, set_personal_access_token, delete_personal_access_token, \
-    create_reflection, modify_reflection, delete_reflection, cancel_job, modify_queue, modify_rules, create_queue, \
-    delete_queue
-from .util import run, run_async, refresh_metadata
+from .model.endpoints import (
+    cancel_job,
+    catalog,
+    catalog_item,
+    collaboration_tags,
+    collaboration_wiki,
+    create_queue,
+    create_reflection,
+    delete_catalog,
+    delete_personal_access_token,
+    delete_queue,
+    delete_reflection,
+    group,
+    job_results,
+    job_status,
+    modify_queue,
+    modify_reflection,
+    modify_rules,
+    personal_access_token,
+    reflection,
+    reflections,
+    refresh_pds,
+    set_catalog,
+    set_personal_access_token,
+    sql,
+    update_catalog,
+    user,
+    votes,
+    wlm_queues,
+    wlm_rules,
+)
+from .util import refresh_metadata, run, run_async
 
 
 class SimpleClient(object):
-
     def __init__(self, config):
         """
         Create a Dremio Simple Client instance. This currently only supports basic auth from the constructor.
@@ -41,12 +66,16 @@ class SimpleClient(object):
         :param config: config dict from confuse
         """
 
-        port = config['port'].get(int)
-        self._hostname = config['hostname'].get()
-        self._base_url = ('https' if config['ssl'].get(bool) else 'http') + '://' + self._hostname + (
-            ':{}'.format(port) if port else '')
+        port = config["port"].get(int)
+        self._hostname = config["hostname"].get()
+        self._base_url = (
+            ("https" if config["ssl"].get(bool) else "http")
+            + "://"
+            + self._hostname
+            + (":{}".format(port) if port else "")
+        )
         self._token = auth(self._base_url, config)
-        self._ssl_verify = config['verify'].get(bool)
+        self._ssl_verify = config["verify"].get(bool)
 
     def catalog(self):
         return catalog(self._token, self._base_url, ssl_verify=self._ssl_verify)

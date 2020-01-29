@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from confuse import NotFoundError
+
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -12,7 +15,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -22,7 +25,6 @@
 # under the License.
 #
 from .basic import login as _login
-from confuse import NotFoundError
 
 
 def login(base_url, config_dict):
@@ -33,18 +35,18 @@ def login(base_url, config_dict):
     :param timeout: optional timeout
     :return: auth token
     """
-    username = config_dict['auth']['username'].get()
+    username = config_dict["auth"]["username"].get()
     if not username:
         raise RuntimeError("No username available, can't login")
-    password = config_dict['auth']['password'].get()
+    password = config_dict["auth"]["password"].get()
     if not password:
         raise RuntimeError("No password available, can't login")
     try:
-        timeout = config_dict['auth']['timeout'].get(int)
+        timeout = config_dict["auth"]["timeout"].get(int)
     except NotFoundError:
         timeout = 10
     try:
-        verify = config_dict['verify'].get(bool)
+        verify = config_dict["verify"].get(bool)
     except NotFoundError:
         verify = 10
     return _login(base_url, username, password, timeout, verify)

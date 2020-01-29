@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -22,6 +23,7 @@
 # under the License.
 #
 
-from .query import run, run_async, refresh_metadata
+from .query import refresh_metadata, run, run_async
 
-__all__ = ['run', 'run_async', 'refresh_metadata']
+
+__all__ = ["run", "run_async", "refresh_metadata"]

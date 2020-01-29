@@ -52,4 +52,3 @@ One can execute many queries at once via async querys also:
                     print('%r generated an exception: %s' % (url, exc))
                 else:
                     print('%r returned %d rows' % (url, len(results)))
-

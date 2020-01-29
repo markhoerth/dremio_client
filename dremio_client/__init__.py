@@ -13,7 +13,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -22,25 +22,23 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import division
+from __future__ import absolute_import, division, print_function
+import os
+
+from .conf import build_config
+from .dremio_client import DremioClient
+from .dremio_simple_client import SimpleClient
+from .model.endpoints import catalog, catalog_item, job_results, job_status, sql
 
 
 __author__ = """Ryan Murray"""
-__email__ = 'rymurr@gmail.com'
-__version__ = '0.7.0'
-
-import os
-from .dremio_client import DremioClient
-from .dremio_simple_client import SimpleClient
-from .conf import build_config
-from .model.endpoints import catalog, catalog_item, sql, job_results, job_status
+__email__ = "rymurr@gmail.com"
+__version__ = "0.7.0"
 
 
 def get_config(config_dir=None):
     if config_dir:
-        os.environ['DREMIO_CLIENTDIR'] = config_dir
+        os.environ["DREMIO_CLIENTDIR"] = config_dir
     return build_config()
 
 
@@ -72,7 +70,7 @@ def _connect(config_dir, simple=False):
     return DremioClient(config_dir)
 
 
-__all__ = ['init', 'catalog', 'catalog_item', 'sql', 'job_status', 'job_results']
+__all__ = ["init", "catalog", "catalog_item", "sql", "job_status", "job_results"]
 
 # https://github.com/ipython/ipython/issues/11653
 # autocomplete doesn't work when using jedi so turn it off!
@@ -83,7 +81,8 @@ except NameError:
 else:
     from IPython import __version__
 
-    major = int(__version__.split('.')[0])
+    major = int(__version__.split(".")[0])
     if major >= 6:
         from IPython import get_ipython
+
         get_ipython().Completer.use_jedi = False

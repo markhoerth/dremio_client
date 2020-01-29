@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -25,10 +26,17 @@
 import attr
 import simplejson as json
 
-from .endpoints import catalog_item, collaboration_tags, collaboration_wiki, refresh_pds, delete_catalog, \
-    update_catalog, set_catalog
 from ..error import DremioException
 from ..util import refresh_metadata
+from .endpoints import (
+    catalog_item,
+    collaboration_tags,
+    collaboration_wiki,
+    delete_catalog,
+    refresh_pds,
+    set_catalog,
+    update_catalog,
+)
 
 
 @attr.s
@@ -263,49 +271,48 @@ class SourceMetadata(object):
 
 
 def _clean(string):
-    return string.replace('"', '').replace(' ', '_').replace(
-        '-', '_').replace('@', '').replace('.', '_')
+    return string.replace('"', "").replace(" ", "_").replace("-", "_").replace("@", "").replace(".", "_")
 
 
 def get_path(item, trim_path):
-    path = item.get('path', [item.get('name', None)])
+    path = item.get("path", [item.get("name", None)])
     return path[trim_path:] if trim_path > 0 else path
 
 
 def create(item, token, base_url, flight_endpoint, trim_path=0, ssl_verify=True, dirty=False):
     path = get_path(item, trim_path)
-    name = _clean('_'.join(path))
-    obj_type = item.get('type', None)
-    container_type = item.get('containerType', None)
-    entity_type = item.get('entityType', None)
-    sql = item.get('sql', None)
-    if obj_type == 'CONTAINER':
-        if container_type == 'HOME':
+    name = _clean("_".join(path))
+    obj_type = item.get("type", None)
+    container_type = item.get("containerType", None)
+    entity_type = item.get("entityType", None)
+    sql = item.get("sql", None)
+    if obj_type == "CONTAINER":
+        if container_type == "HOME":
             return name, Home(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        elif container_type == 'SPACE':
+        elif container_type == "SPACE":
             return name, Space(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        elif container_type == 'SOURCE':
+        elif container_type == "SOURCE":
             return name, Source(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        elif container_type == 'FOLDER':
+        elif container_type == "FOLDER":
             return name, Folder(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
     else:
-        if obj_type == 'DATASET':
+        if obj_type == "DATASET":
             if sql:
                 return name, VirtualDataset(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
             else:
                 return name, PhysicalDataset(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        elif obj_type == 'FILE':
+        elif obj_type == "FILE":
             return name, File(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        if entity_type == 'source':
+        if entity_type == "source":
             return name, Source(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        elif entity_type == 'folder':
+        elif entity_type == "folder":
             return name, Folder(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        elif entity_type == 'home':
+        elif entity_type == "home":
             return name, Home(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        elif entity_type == 'space':
+        elif entity_type == "space":
             return name, Space(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
-        elif entity_type == 'dataset':
-            if 'VIRTUAL' in obj_type:
+        elif entity_type == "dataset":
+            if "VIRTUAL" in obj_type:
                 return name, VirtualDataset(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
             else:
                 return name, PhysicalDataset(token, base_url, flight_endpoint, ssl_verify, dirty, **item)
@@ -313,7 +320,6 @@ def create(item, token, base_url, flight_endpoint, trim_path=0, ssl_verify=True,
 
 
 class Catalog(dict):
-
     def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False):
         dict.__init__(self)
         self._base_url = base_url
@@ -333,8 +339,7 @@ class Catalog(dict):
 
     def keys(self):
         keys = dict.keys(self)
-        return [i for i in keys if i not in {
-            '_catalog_item', '_base_url', '_token', '_flight_endpoint'}]
+        return [i for i in keys if i not in {"_catalog_item", "_base_url", "_token", "_flight_endpoint"}]
 
     def delete(self):
         _delete(self)
@@ -360,20 +365,20 @@ class Catalog(dict):
             pass
 
     def insert(self, entity_type, name, commit=True, **kwargs):
-        if entity_type == 'space':
+        if entity_type == "space":
             obj = create_space(self, name)
-        elif entity_type == 'folder':
+        elif entity_type == "folder":
             try:
                 path = self.meta.path
             except:  # NOQA
                 path = [self.name]
             obj = create_folder(self, path + [name])
-        elif entity_type == 'vds':
+        elif entity_type == "vds":
             try:
                 path = self.meta.path
             except:  # NOQA
                 path = [self.name]
-            obj = create_vds(self, path + [name], kwargs['sql'], kwargs.get('sqlContext', None))
+            obj = create_vds(self, path + [name], kwargs["sql"], kwargs.get("sqlContext", None))
         else:
             raise NotImplementedError
         self[name] = obj
@@ -381,16 +386,17 @@ class Catalog(dict):
             self[name].commit()
 
     def __dir__(self):
-        if len(self.keys()) == 0 and 'meta' in self.__dict__:
-            if self.meta.entityType in {'source', 'home', 'space', 'folder', 'root', 'dataset'}:
-                result = self._catalog_item(self.meta.id if hasattr(self.meta, 'id') else None,
-                                            self.meta.path if hasattr(self.meta, 'path') else None)
-                _, obj = create(result, self._token,
-                                self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
+        if len(self.keys()) == 0 and "meta" in self.__dict__:
+            if self.meta.entityType in {"source", "home", "space", "folder", "root", "dataset"}:
+                result = self._catalog_item(
+                    self.meta.id if hasattr(self.meta, "id") else None,
+                    self.meta.path if hasattr(self.meta, "path") else None,
+                )
+                _, obj = create(result, self._token, self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
                 self.update(obj)
                 self.meta = attr.evolve(self.meta, **{k: v for k, v in attr.asdict(obj.meta).items() if v})
                 return list(self.keys())
-        return list(self.keys()) + ['_repr_html_']
+        return list(self.keys()) + ["_repr_html_"]
 
     def to_json(self):
         result = attr.asdict(self.meta)
@@ -401,17 +407,17 @@ class Catalog(dict):
             except:  # NOQA
                 pass
         if len(children) > 1:
-            result['children'] = children
+            result["children"] = children
         return json.dumps(result)
 
     def __getattr__(self, item):
-        if item == '_ipython_canary_method_should_not_exist_':
+        if item == "_ipython_canary_method_should_not_exist_":
             raise AttributeError
         try:
             value = dict.__getitem__(self, item)
             if value is None:
                 raise KeyError()
-            if isinstance(value, Catalog) and value['_base_url'] is None:
+            if isinstance(value, Catalog) and value["_base_url"] is None:
                 raise KeyError()
             return value
         except KeyError:
@@ -432,12 +438,13 @@ class Catalog(dict):
     def _repr_html_(self):
         try:
             tags = self.tags().tags
-            tags_html = '\n'.join(['<span class="badge">{}</span>'.format(i) for i in tags])
-            tag_html = '<div> <strong>Tags: </strong> {} </div>'.format(tags_html)
+            tags_html = "\n".join(['<span class="badge">{}</span>'.format(i) for i in tags])
+            tag_html = "<div> <strong>Tags: </strong> {} </div>".format(tags_html)
         except DremioException:
-            tag_html = ''
+            tag_html = ""
         try:
             import markdown
+
             wiki = self.wiki()
             text = wiki.text
             html = markdown.markdown(text)
@@ -458,8 +465,7 @@ def _put(self):
     cid = self.meta.id
     result = update_catalog(self._token, self._base_url, cid, attr.asdict(self.meta), self._ssl_verify)
 
-    _, obj = create(result, self._token,
-                    self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
+    _, obj = create(result, self._token, self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
     return obj.meta
 
 
@@ -471,35 +477,33 @@ def _delete(self):
 
 def _post(self):
     json = {k: v for k, v in attr.asdict(self.meta).items() if v}
-    for i in ('state', 'id', 'tag', 'createdAt'):
+    for i in ("state", "id", "tag", "createdAt"):
         if i in json:
             del json[i]
     result = set_catalog(self._token, self._base_url, json, self._ssl_verify)
-    _, obj = create(result, self._token,
-                    self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
+    _, obj = create(result, self._token, self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
     return obj.meta
 
 
 class Root(Catalog):
-
     def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False):
         Catalog.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty)
-        self.meta = RootMetaData('root')
+        self.meta = RootMetaData("root")
 
     def add(self, item):
-        name, obj = create(item, self._token, self._base_url,
-                           self._flight_endpoint, ssl_verify=self._ssl_verify)
+        name, obj = create(item, self._token, self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
         self[name] = obj
 
     def add_by_path(self, item, new_entity=True):
         if new_entity:
-            cid = item.pop('id')
-            tag = item.pop('tag')
-        name, obj = create(item, self._token, self._base_url,
-                           self._flight_endpoint, ssl_verify=self._ssl_verify, dirty=True)
+            cid = item.pop("id")
+            tag = item.pop("tag")
+        name, obj = create(
+            item, self._token, self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify, dirty=True
+        )
         if new_entity:
-            item['id'] = cid  # NOQA
-            item['tag'] = tag  # NOQA
+            item["id"] = cid  # NOQA
+            item["tag"] = tag  # NOQA
         base = self
         subpath = list()
         for p in obj.meta.path[:-1]:
@@ -508,7 +512,7 @@ class Root(Catalog):
                 base = base[_clean(p)]
             except KeyError as e:
                 if isinstance(obj, PhysicalDataset):
-                    self.add({'entityType': 'folder', 'path': subpath})
+                    self.add({"entityType": "folder", "path": subpath})
                 else:
                     raise e
         base[_clean(obj.meta.path[-1])] = obj
@@ -517,74 +521,76 @@ class Root(Catalog):
 def _get_acl(acl):
     if not acl:
         return
-    return [AccessControl(ac.get('id'), ac.get('permission')) for ac in acl]
+    return [AccessControl(ac.get("id"), ac.get("permission")) for ac in acl]
 
 
 def _get_acls(acl):
     if not acl:
         return
     return AccessControlList(
-        users=_get_acl(acl.get('users')),
-        groups=_get_acl(acl.get('groups')),
-        version=acl.get('version')
+        users=_get_acl(acl.get("users")), groups=_get_acl(acl.get("groups")), version=acl.get("version")
     )
 
 
 class Space(Catalog):
-
-    def __init__(self, token=None, base_url=None,
-                 flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
+    def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
         Catalog.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty)
         self.meta = SpaceMetaData(
-            entityType='space',
-            id=kwargs.get('id'),
-            tag=kwargs.get('tag'),
-            name=kwargs.get('name'),
-            path=kwargs.get('path'),
-            accessControlList=_get_acls(kwargs.get('accessControlList'))
+            entityType="space",
+            id=kwargs.get("id"),
+            tag=kwargs.get("tag"),
+            name=kwargs.get("name"),
+            path=kwargs.get("path"),
+            accessControlList=_get_acls(kwargs.get("accessControlList")),
         )
-        for child in kwargs.get('children', list()):
-            name, item = create(child, token, base_url, self._flight_endpoint,
-                                trim_path=len(child.get('path', list())) - 1, ssl_verify=self._ssl_verify)
+        for child in kwargs.get("children", list()):
+            name, item = create(
+                child,
+                token,
+                base_url,
+                self._flight_endpoint,
+                trim_path=len(child.get("path", list())) - 1,
+                ssl_verify=self._ssl_verify,
+            )
             self[name] = item
 
 
 class Home(Space):
-
-    def __init__(self, token=None, base_url=None,
-                 flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
+    def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
         Space.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty, **kwargs)
-        self.meta = attr.evolve(self.meta, entityType='home')
+        self.meta = attr.evolve(self.meta, entityType="home")
 
 
 class Folder(Catalog):
-
-    def __init__(self, token=None, base_url=None,
-                 flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
+    def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
         Catalog.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty)
         self.meta = FolderMetaData(
-            entityType='folder',
-            id=kwargs.get('id', None),
-            tag=kwargs.get('tag', None),
-            path=kwargs.get('path', None),
-            accessControlList=_get_acls(kwargs.get('accessControlList'))
+            entityType="folder",
+            id=kwargs.get("id", None),
+            tag=kwargs.get("tag", None),
+            path=kwargs.get("path", None),
+            accessControlList=_get_acls(kwargs.get("accessControlList")),
         )
-        for child in kwargs.get('children', list()):
-            name, item = create(child, token, base_url, self._flight_endpoint,
-                                trim_path=len(kwargs.get('path', list())), ssl_verify=self._ssl_verify)
+        for child in kwargs.get("children", list()):
+            name, item = create(
+                child,
+                token,
+                base_url,
+                self._flight_endpoint,
+                trim_path=len(kwargs.get("path", list())),
+                ssl_verify=self._ssl_verify,
+            )
             self[name] = item
 
 
 class File(Catalog):
-
-    def __init__(self, token=None, base_url=None,
-                 flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
+    def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
         Catalog.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty)
         self.meta = FileMetaData(
-            entityType='file',
-            id=kwargs.get('id', None),
-            path=kwargs.get('path', None),
-            accessControlList=_get_acls(kwargs.get('accessControlList'))
+            entityType="file",
+            id=kwargs.get("id", None),
+            path=kwargs.get("path", None),
+            accessControlList=_get_acls(kwargs.get("accessControlList")),
         )
 
 
@@ -600,75 +606,75 @@ def _get_metadata_policy(metadata_policy):
     if not metadata_policy:
         return None
     return MetadataPolicy(
-        authTTLMs=metadata_policy.get('authTTLMs'),
-        datasetRefreshAfterMs=metadata_policy.get('datasetRefreshAfterMs'),
-        datasetExpireAfterMs=metadata_policy.get('datasetExpireAfterMs'),
-        namesRefreshMs=metadata_policy.get('namesRefreshMs'),
-        datasetUpdateMode=metadata_policy.get('datasetUpdateMode')
+        authTTLMs=metadata_policy.get("authTTLMs"),
+        datasetRefreshAfterMs=metadata_policy.get("datasetRefreshAfterMs"),
+        datasetExpireAfterMs=metadata_policy.get("datasetExpireAfterMs"),
+        namesRefreshMs=metadata_policy.get("namesRefreshMs"),
+        datasetUpdateMode=metadata_policy.get("datasetUpdateMode"),
     )
 
 
 def _get_source_state(state):
     if not state:
         return None
-    return SourceState(
-        status=state.get('status'),
-        message=state.get('message')
-    )
+    return SourceState(status=state.get("status"), message=state.get("message"))
 
 
 def _get_source_meta(kwargs):
     return SourceMetadata(
         entityType="source",
-        id=kwargs.get('id'),
-        name=kwargs.get('name'),
-        description=kwargs.get('description'),
-        tag=kwargs.get('tag'),
-        type=_get_source_type(kwargs.get('type')),
-        config=_get_source_config(kwargs.get('config')),
-        createdAt=kwargs.get('createdAt'),
-        metadataPolicy=_get_metadata_policy(kwargs.get('metadataPolicy')),
-        state=_get_source_state(kwargs.get('state')),
-        accelerationGracePeriodMs=kwargs.get('accelerationGracePeriodMs'),
-        accelerationRefreshPeriodMs=kwargs.get('accelerationRefreshPeriodMs'),
-        accelerationNeverExpire=kwargs.get('accelerationNeverExpire'),
-        accelerationNeverRefresh=kwargs.get('accelerationNeverRefresh'),
-        path=kwargs.get('path'),
-        accessControlList=_get_acls(kwargs.get('accessControlList'))
+        id=kwargs.get("id"),
+        name=kwargs.get("name"),
+        description=kwargs.get("description"),
+        tag=kwargs.get("tag"),
+        type=_get_source_type(kwargs.get("type")),
+        config=_get_source_config(kwargs.get("config")),
+        createdAt=kwargs.get("createdAt"),
+        metadataPolicy=_get_metadata_policy(kwargs.get("metadataPolicy")),
+        state=_get_source_state(kwargs.get("state")),
+        accelerationGracePeriodMs=kwargs.get("accelerationGracePeriodMs"),
+        accelerationRefreshPeriodMs=kwargs.get("accelerationRefreshPeriodMs"),
+        accelerationNeverExpire=kwargs.get("accelerationNeverExpire"),
+        accelerationNeverRefresh=kwargs.get("accelerationNeverRefresh"),
+        path=kwargs.get("path"),
+        accessControlList=_get_acls(kwargs.get("accessControlList")),
     )
 
 
 class Source(Catalog):
-    def __init__(self, token=None, base_url=None,
-                 flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
+    def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
         Catalog.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty)
         self.meta = _get_source_meta(kwargs)
         path = self.meta.path
-        for child in kwargs.get('children', list()):
+        for child in kwargs.get("children", list()):
             name, item = create(
-                child, token, base_url, self._flight_endpoint, trim_path=(
-                    len(path) if path else 1), ssl_verify=self._ssl_verify)
+                child,
+                token,
+                base_url,
+                self._flight_endpoint,
+                trim_path=(len(path) if path else 1),
+                ssl_verify=self._ssl_verify,
+            )
             self[name] = item
 
 
 class Dataset(Catalog):
-    def __init__(self, token=None, base_url=None,
-                 flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
+    def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
         Catalog.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty)
         self.meta = DatasetMetaData(
-            entityType='dataset',
-            id=kwargs.get('id'),
-            path=kwargs.get('path'),
-            tag=kwargs.get('tag'),
-            type=kwargs.get('type'),
-            fields=kwargs.get('fields'),
-            createdAt=kwargs.get('createdAt'),
-            accelerationRefreshPolicy=kwargs.get('accelerationRefreshPolicy'),
-            sql=kwargs.get('sql'),
-            sqlContext=kwargs.get('sqlContext'),
-            format=kwargs.get('format'),
-            approximateStatisticsAllowed=kwargs.get('approximateStatisticsAllowed'),
-            accessControlList=_get_acls(kwargs.get('accessControlList'))
+            entityType="dataset",
+            id=kwargs.get("id"),
+            path=kwargs.get("path"),
+            tag=kwargs.get("tag"),
+            type=kwargs.get("type"),
+            fields=kwargs.get("fields"),
+            createdAt=kwargs.get("createdAt"),
+            accelerationRefreshPolicy=kwargs.get("accelerationRefreshPolicy"),
+            sql=kwargs.get("sql"),
+            sqlContext=kwargs.get("sqlContext"),
+            format=kwargs.get("format"),
+            approximateStatisticsAllowed=kwargs.get("approximateStatisticsAllowed"),
+            accessControlList=_get_acls(kwargs.get("accessControlList")),
         )
 
     def query(self):
@@ -679,21 +685,18 @@ class Dataset(Catalog):
 
 
 class PhysicalDataset(Dataset):
-    def __init__(self, token=None, base_url=None,
-                 flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
+    def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
         Dataset.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty, **kwargs)
 
     def metadata_refresh(self):
-        refresh_metadata(self._token, self._base_url,
-                         ".".join(self.meta.path))
+        refresh_metadata(self._token, self._base_url, ".".join(self.meta.path))
 
     def refresh(self):
         refresh_pds(self._token, self._base_url, self.meta.id, self._ssl_verify)
 
 
 class VirtualDataset(Dataset):
-    def __init__(self, token=None, base_url=None,
-                 flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
+    def __init__(self, token=None, base_url=None, flight_endpoint=None, ssl_verify=True, dirty=False, **kwargs):
         Dataset.__init__(self, token, base_url, flight_endpoint, ssl_verify, dirty, **kwargs)
 
 
@@ -738,11 +741,11 @@ def make_reflection(data, summary=False):
 
 
 def make_tags(tags):
-    return TagsData(tags=tags.get('tags'), version=tags.get('version'))
+    return TagsData(tags=tags.get("tags"), version=tags.get("version"))
 
 
 def make_wiki(wiki):
-    return WikiData(text=wiki.get('text'), version=wiki.get('version'))
+    return WikiData(text=wiki.get("text"), version=wiki.get("version"))
 
 
 def make_wlm_rule(rule):
@@ -752,7 +755,7 @@ def make_wlm_rule(rule):
         name=rule.get("name"),
         acceptId=rule.get("acceptId"),
         acceptName=rule.get("acceptName"),
-        action=rule.get("action")
+        action=rule.get("action"),
     )
 
 
@@ -763,7 +766,7 @@ def make_wlm_queue(queue):
         name=queue.get("name"),
         cpuTier=queue.get("cpuTier"),
         maxAllowedRunningJobs=queue.get("maxAllowedRunningJobs"),
-        maxStartTimeoutMs=queue.get("maxStartTimeoutMs")
+        maxStartTimeoutMs=queue.get("maxStartTimeoutMs"),
     )
 
 
@@ -775,36 +778,28 @@ def make_vote(vote):
         datasetPath=vote.get("datasetPath"),
         datasetType=vote.get("datasetType"),
         datasetReflectionCount=vote.get("datasetReflectionCount"),
-        entityType="vote-summary"
+        entityType="vote-summary",
     )
 
 
 def create_vds(catalog, path, sql, sqlContext):
-    return VirtualDataset(catalog._token,
-                          catalog._base_url,
-                          catalog._flight_endpoint,
-                          catalog._ssl_verify,
-                          True,
-                          path=path,
-                          sql=sql,
-                          sqlContext=sqlContext,
-                          entityType='dataset',
-                          type='VIRTUAL_DATASET')
+    return VirtualDataset(
+        catalog._token,
+        catalog._base_url,
+        catalog._flight_endpoint,
+        catalog._ssl_verify,
+        True,
+        path=path,
+        sql=sql,
+        sqlContext=sqlContext,
+        entityType="dataset",
+        type="VIRTUAL_DATASET",
+    )
 
 
 def create_space(catalog, name):
-    return Space(catalog._token,
-                 catalog._base_url,
-                 catalog._flight_endpoint,
-                 catalog._ssl_verify,
-                 True,
-                 name=name)
+    return Space(catalog._token, catalog._base_url, catalog._flight_endpoint, catalog._ssl_verify, True, name=name)
 
 
 def create_folder(catalog, path):
-    return Folder(catalog._token,
-                  catalog._base_url,
-                  catalog._flight_endpoint,
-                  catalog._ssl_verify,
-                  True,
-                  path=path)
+    return Folder(catalog._token, catalog._base_url, catalog._flight_endpoint, catalog._ssl_verify, True, path=path)

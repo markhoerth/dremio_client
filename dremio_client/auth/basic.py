@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -12,7 +13,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -34,14 +35,8 @@ def login(base_url, username, password, timeout=10, verify=True):
     :param verify: If false ignore ssl errors
     :return: auth token
     """
-    url = base_url + '/apiv2/login'
+    url = base_url + "/apiv2/login"
 
-    r = requests.post(
-        url,
-        json={
-            "userName": username,
-            "password": password},
-        timeout=timeout,
-        verify=verify)
+    r = requests.post(url, json={"userName": username, "password": password}, timeout=timeout, verify=verify)
     r.raise_for_status()
-    return r.json()['token']
+    return r.json()["token"]

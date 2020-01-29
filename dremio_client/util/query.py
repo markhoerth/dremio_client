@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -12,7 +13,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -24,21 +25,23 @@
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
 
-from ..model.endpoints import job_results, job_status, sql
 from ..error import DremioException
+from ..model.endpoints import job_results, job_status, sql
+
 
 executor = ThreadPoolExecutor(max_workers=8)
 
 _job_states = {
-    'NOT_SUBMITTED',
-    'STARTING',
-    'RUNNING',
-    'COMPLETED',
-    'CANCELED',
-    'FAILED',
-    'CANCELLATION_REQUESTED',
-    'ENQUEUED'}
-_done_job_states = {'COMPLETED', 'CANCELED', 'FAILED'}
+    "NOT_SUBMITTED",
+    "STARTING",
+    "RUNNING",
+    "COMPLETED",
+    "CANCELED",
+    "FAILED",
+    "CANCELLATION_REQUESTED",
+    "ENQUEUED",
+}
+_done_job_states = {"COMPLETED", "CANCELED", "FAILED"}
 
 
 def run(token, base_url, query, context=None, sleep_time=10, ssl_verify=True):
@@ -63,13 +66,13 @@ def run(token, base_url, query, context=None, sleep_time=10, ssl_verify=True):
     """
     assert sleep_time > 0
     job = sql(token, base_url, query, context, ssl_verify=ssl_verify)
-    job_id = job['id']
+    job_id = job["id"]
     while True:
         state = job_status(token, base_url, job_id, ssl_verify=ssl_verify)
-        if state['jobState'] == 'COMPLETED':
-            row_count = state.get('rowCount', 0)
+        if state["jobState"] == "COMPLETED":
+            row_count = state.get("rowCount", 0)
             break
-        if state['jobState'] in {'CANCELED', 'FAILED'}:
+        if state["jobState"] in {"CANCELED", "FAILED"}:
             # todo add info about why did it fail
             raise DremioException("job failed " + str(state), None)
         time.sleep(sleep_time)
@@ -122,7 +125,8 @@ def refresh_metadata(token, base_url, table, ssl_verify=True):
     >>> refresh_metadata('abc', 'http://localhost:9047', 'source.pds')
     """
     res = []
-    for x in run(token, base_url,
-                 "ALTER PDS {} REFRESH METADATA FORCE UPDATE".format(table), sleep_time=2, ssl_verify=ssl_verify):
+    for x in run(
+        token, base_url, "ALTER PDS {} REFRESH METADATA FORCE UPDATE".format(table), sleep_time=2, ssl_verify=ssl_verify
+    ):
         res.append(x)
     return res

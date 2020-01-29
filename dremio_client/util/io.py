@@ -13,7 +13,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -23,28 +23,32 @@
 # under the License.
 #
 from collections import defaultdict
+
 import simplejson as json
-from dremio_client.error import DremioNotFoundException, DremioBadRequestException
+from dremio_client.error import (
+    DremioBadRequestException,
+    DremioNotFoundException,
+)
 
 
 def _recursve_catalog(catalog):
     data = []
     acls = []
-    collabs = {'tags': list(), 'wiki': list()}
+    collabs = {"tags": list(), "wiki": list()}
     for name in catalog:
         item = catalog[name].get()
-        if item.meta.entityType == 'home':
+        if item.meta.entityType == "home":
             continue
-        if item.meta.entityType != 'file':
-            if item.meta.entityType == 'source' or item.meta.entityType == 'dataset':
+        if item.meta.entityType != "file":
+            if item.meta.entityType == "source" or item.meta.entityType == "dataset":
                 data.append(item)
-                acls.append(item.meta['accessControlList'])
+                acls.append(item.meta["accessControlList"])
                 try:
-                    collabs['tags'].append(item.tags())
+                    collabs["tags"].append(item.tags())
                 except (DremioBadRequestException, DremioNotFoundException):
                     pass
                 try:
-                    collabs['wiki'].append(item.wiki())
+                    collabs["wiki"].append(item.wiki())
                 except (DremioBadRequestException, DremioNotFoundException):
                     pass
             else:
@@ -52,8 +56,8 @@ def _recursve_catalog(catalog):
                 d, a, c = _recursve_catalog(item)
                 data.extend(d)
                 acls.extend(a)
-                collabs['tags'].extend(c['tags'])
-                collabs['wiki'].extend(c['wiki'])
+                collabs["tags"].extend(c["tags"])
+                collabs["wiki"].extend(c["wiki"])
     return data, acls, collabs
 
 
@@ -98,7 +102,7 @@ def commit_all(catalog):
     :return: None
     """
     data = _sort(catalog)
-    for i in ('space', 'folder', 'dataset'):
+    for i in ("space", "folder", "dataset"):
         for x in data[i]:
             x.commit()
 
@@ -107,10 +111,10 @@ def _sort(catalog):
     data = defaultdict(list)
     for name in catalog:
         item = catalog[name]
-        if item.meta.entityType == 'home':
+        if item.meta.entityType == "home":
             continue
-        if item.meta.entityType != 'file':
-            if item.meta.entityType == 'source' or item.meta.entityType == 'dataset':
+        if item.meta.entityType != "file":
+            if item.meta.entityType == "source" or item.meta.entityType == "dataset":
                 data[item.meta.entityType].append(item)
             else:
                 data[item.meta.entityType].append(item)

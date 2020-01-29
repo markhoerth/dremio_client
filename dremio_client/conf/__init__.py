@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -22,10 +23,8 @@
 # under the License.
 #
 
-from .config_parser import build_config  # NOQA
-from .cli_helper import get_base_url_token  # NOQA
-from six import StringIO
 import yaml
+from six import StringIO
 
 
 def to_dict(config):

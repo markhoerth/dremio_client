@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from ..auth import auth
+
 #
 # Copyright (c) 2019 Ryan Murray.
 #
@@ -12,7 +15,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -22,14 +25,13 @@
 # under the License.
 #
 from .config_parser import build_config
-from ..auth import auth
 
 
 def get_base_url_token(args=None):
     config = build_config(args)
-    ssl = 's' if config['ssl'].get(bool) else ''
-    host = config['hostname'].get()
-    port = ":" + str(config['port'].get(int))
-    base_url = 'http{}://{}{}'.format(ssl, host, port)
+    ssl = "s" if config["ssl"].get(bool) else ""
+    host = config["hostname"].get()
+    port = ":" + str(config["port"].get(int))
+    base_url = "http{}://{}{}".format(ssl, host, port)
     token = auth(base_url, config)
     return base_url, token
