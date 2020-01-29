@@ -8,7 +8,6 @@ repos:
     rev: v1.2.3
     hooks:
     - id: flake8
-    - id: end-of-file-fixer
     - id: trailing-whitespace
     - id: check-added-large-files
     - id: check-ast

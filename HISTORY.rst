@@ -32,7 +32,7 @@ History
 * utilities for building spaces/folders vds
 * removed recordclass library in favor of attrs
 
-0.8.3 (2020-01-29)
+0.8.4 (2020-01-29)
 ------------------
 
 * history re-written
