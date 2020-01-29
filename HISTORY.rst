@@ -31,3 +31,8 @@ History
 * lots of bugfixes
 * utilities for building spaces/folders vds
 * removed recordclass library in favor of attrs
+
+0.7.0 (2020-01-29)
+------------------
+
+* history re-written
