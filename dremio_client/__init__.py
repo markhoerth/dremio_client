@@ -36,13 +36,13 @@ __email__ = "rymurr@gmail.com"
 __version__ = "__version__ = '0.8.4'"
 
 
-def get_config(config_dir=None):
+def get_config(config_dir=None, args=None):
     if config_dir:
         os.environ["DREMIO_CLIENTDIR"] = config_dir
-    return build_config()
+    return build_config(args)
 
 
-def init(config_dir=None, simple_client=False):
+def init(config_dir=None, simple_client=False, config_dict=None):
     """ create a new Dremio client object
 
     This returns a rich client by default. This client abstracts the Dremio catalog into a
@@ -54,20 +54,23 @@ def init(config_dir=None, simple_client=False):
 
     :param config_dir: optional directory to look for config in
     :param simple_client: return the 'simple' client.
+    :param config_dict: dictionary of extra config arguments
     :return: either a simple or rich client
 
     :example:
 
     >>> client = init('/my/config/dir')
     """
-    config = get_config(config_dir)
+    if config_dict is None:
+        config_dict = dict()
+    config = get_config(config_dir, args=config_dict)
     return _connect(config, simple_client)
 
 
-def _connect(config_dir, simple=False):
+def _connect(config, simple=False):
     if simple:
-        return SimpleClient(config_dir)
-    return DremioClient(config_dir)
+        return SimpleClient(config)
+    return DremioClient(config)
 
 
 __all__ = ["init", "catalog", "catalog_item", "sql", "job_status", "job_results"]
