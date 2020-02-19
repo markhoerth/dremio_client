@@ -36,3 +36,8 @@ History
 ------------------
 
 * history re-written
+
+0.8.4 (2020-02-19)
+------------------
+
+* minor bug fixes
