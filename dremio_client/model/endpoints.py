@@ -406,7 +406,7 @@ def update_catalog(token, base_url, cid, json, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: updated catalog entity
     """
-    return _put(base_url + "/api/v3/catalog", token, json, ssl_verify=ssl_verify)
+    return _put(base_url + "/api/v3/catalog/{}".format(cid), token, json, ssl_verify=ssl_verify)
 
 
 def set_personal_access_token(token, base_url, uid, label, lifetime=24, ssl_verify=True):
