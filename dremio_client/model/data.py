@@ -377,7 +377,7 @@ class Catalog(dict):
             try:
                 path = self.meta.path
             except:  # NOQA
-                path = [self.name]
+                path = [self.meta.name]
             obj = create_vds(self, path + [name], kwargs["sql"], kwargs.get("sqlContext", None))
         else:
             raise NotImplementedError
