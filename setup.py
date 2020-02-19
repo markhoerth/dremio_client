@@ -82,7 +82,7 @@ setup(
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/rymurr/dremio_client",
-    version="version='0.8.6'",
+    version="version='0.8.7'",
     zip_safe=False,
     extras_require={
         ':python_version == "2.7"': ["futures"],
