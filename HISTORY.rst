@@ -47,7 +47,7 @@ History
 
 * ensure use correct name for Spaces
 
-0.8.10 (2020-03-09)
-------------------
+0.8.11 (2020-03-09)
+-------------------
 
 * bug fixes when creating sources and folders
