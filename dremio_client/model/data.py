@@ -370,14 +370,22 @@ class Catalog(dict):
         elif entity_type == "folder":
             try:
                 path = self.meta.path
+                if not path:
+                    raise KeyError
             except:  # NOQA
-                path = [self.name]
+                path = [self.meta.name]
+                if not path:
+                    path = []
             obj = create_folder(self, path + [name])
         elif entity_type == "vds":
             try:
                 path = self.meta.path
+                if not path:
+                    raise KeyError
             except:  # NOQA
                 path = [self.meta.name]
+                if not path:
+                    path = []
             obj = create_vds(self, path + [name], kwargs["sql"], kwargs.get("sqlContext", None))
         else:
             raise NotImplementedError
