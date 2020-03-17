@@ -59,6 +59,7 @@ from .model.endpoints import (
     set_personal_access_token as _set_personal_access_token,
     sql as _sql,
     update_catalog as _update_catalog,
+    promote_catalog as _promote_catalog,
     user as _user,
     votes as _votes,
     wlm_queues as _wlm_queues,
@@ -370,7 +371,7 @@ def _to_text(text):
 
 @cli.command()
 @click.argument("data", nargs=1, required=True)
-@click.option("-i", "--cid", help="catalog endity")
+@click.option("-i", "--cid", help="catalog entity")
 @click.pass_obj
 def update_catalog(args, data, cid):
     """
@@ -379,6 +380,20 @@ def update_catalog(args, data, cid):
     """
     base_url, token = get_base_url_token(args)
     x = _update_catalog(token, base_url, cid, data, ssl_verify=args.get("ssl_verify", True))
+    click.echo(json.dumps(x))
+
+
+@cli.command()
+@click.argument("data", nargs=1, required=True)
+@click.option("-i", "--cid", help="catalog entity")
+@click.pass_obj
+def promote_catalog(args, data, cid):
+    """
+    update a catalog entity (cid) given a json data object
+
+    """
+    base_url, token = get_base_url_token(args)
+    x = _promote_catalog(token, base_url, cid, data, ssl_verify=args.get("ssl_verify", True))
     click.echo(json.dumps(x))
 
 
