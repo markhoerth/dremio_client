@@ -49,6 +49,7 @@ from .model.endpoints import (
     set_personal_access_token,
     sql,
     update_catalog,
+    promote_catalog,
     user,
     votes,
     wlm_queues,
@@ -252,6 +253,17 @@ class SimpleClient(object):
         :return: updated catalog entity
         """
         return update_catalog(self._token, self._base_url, cid, json, ssl_verify=self._ssl_verify)
+
+    def promote_catalog(self, cid, json):
+        """ promote a catalog entity
+
+        https://docs.dremio.com/rest-api/catalog/put-catalog-id.html
+
+        :param cid: id of catalog entity
+        :param json: json document for new catalog entity
+        :return: updated catalog entity
+        """
+        return promote_catalog(self._token, self._base_url, cid, json, ssl_verify=self._ssl_verify)
 
     def delete_catalog(self, cid, tag):
         """ remove a catalog item from Dremio
