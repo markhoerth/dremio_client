@@ -51,3 +51,8 @@ History
 -------------------
 
 * bug fixes when creating sources and folders
+
+0.9.0 (2020-03-17)
+------------------
+
+* add promote endpoint
