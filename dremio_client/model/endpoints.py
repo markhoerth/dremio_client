@@ -409,6 +409,21 @@ def update_catalog(token, base_url, cid, json, ssl_verify=True):
     return _put(base_url + "/api/v3/catalog/{}".format(cid), token, json, ssl_verify=ssl_verify)
 
 
+def promote_catalog(token, base_url, cid, json, ssl_verify=True):
+    """ promote a catalog entity (only works on folders and files in sources
+
+    https://docs.dremio.com/rest-api/catalog/post-catalog-id.html
+
+    :param token: auth token
+    :param base_url: sql query
+    :param cid: id of catalog entity
+    :param json: json document for new catalog entity
+    :param ssl_verify: ignore ssl errors if False
+    :return: updated catalog entity
+    """
+    return _post(base_url + "/api/v3/catalog/{}".format(cid), token, json, ssl_verify=ssl_verify)
+
+
 def set_personal_access_token(token, base_url, uid, label, lifetime=24, ssl_verify=True):
     """ create a pat for a given user
 
