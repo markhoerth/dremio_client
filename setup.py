@@ -35,7 +35,7 @@ with open("README.rst") as readme_file:
 with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-requirements = ["Click>=6.0", "requests>=2.21.0", "confuse", "simplejson", "attrs"]
+requirements = ["Click>=6.0", "requests>=2.21.0", "confuse", "simplejson", "attrs", "six"]
 
 requirements_noarrow = ["pandas>=0.24.2", "requests-futures==1.0.0", "markdown"]
 

@@ -24,6 +24,7 @@
 #
 
 from .query import refresh_metadata, run, run_async
+from .promote import promote_catalog
 
 
-__all__ = ["run", "run_async", "refresh_metadata"]
+__all__ = ["run", "run_async", "refresh_metadata", "promote_catalog"]

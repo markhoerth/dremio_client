@@ -3,3 +3,4 @@ Click>=6.0
 confuse==1.0.0
 requests>=2.21.0
 simplejson==3.17.0
+six==1.14.0

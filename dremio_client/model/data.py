@@ -25,6 +25,7 @@
 
 import attr
 import simplejson as json
+from six.moves.urllib.parse import quote
 
 from ..error import DremioException
 from ..util import refresh_metadata
@@ -36,6 +37,7 @@ from .endpoints import (
     refresh_pds,
     set_catalog,
     update_catalog,
+    promote_catalog,
 )
 
 
@@ -392,6 +394,62 @@ class Catalog(dict):
         self[name] = obj
         if commit:
             self[name].commit()
+
+    def promote(self, file_format="parquet", **kwargs):
+        """ promote this file/folder to a PDS
+
+        .. note:: can only be run on a file or folder in a Source
+
+        :param file_format: file format of the file/folder (only parquet, xls, excel, json, text are accepted)
+        :return None
+        """
+        if file_format == "parquet":
+            format_dict = {"type": "Parquet"}
+        elif file_format == "json":
+            format_dict = {"type": "JSON"}
+        elif file_format == "csv":
+            format_dict = {
+                "type": "Text",
+                "fieldDelimiter": kwargs.get("fieldDelimiter"),
+                "lineDelimiter": kwargs.get("lineDelimiter"),
+                "quote": kwargs.get("quote"),
+                "comment": kwargs.get("comment"),
+                "escape": kwargs.get("escape"),
+                "skipFirstLine": kwargs.get("skipFirstLine", True),
+                "extractHeader": kwargs.get("extractHeader", True),
+                "trimHeader": kwargs.get("trimHeader", True),
+                "autoGenerateColumnNames": kwargs.get("autoGenerateColumnNames", True),
+            }
+        elif file_format == "excel":
+            format_dict = {
+                "type": "Excel",
+                "sheetName": kwargs.get("sheetName"),
+                "extractHeader": kwargs.get("extractHeader", True),
+                "hasMergedCells": kwargs.get("hasMergedCells", True),
+            }
+        elif file_format == "xls":
+            format_dict = {
+                "type": "XLS",
+                "sheetName": kwargs.get("sheetName"),
+                "extractHeader": kwargs.get("extractHeader", True),
+                "hasMergedCells": kwargs.get("hasMergedCells", True),
+            }
+        else:
+            raise NotImplementedError("{} format is not applicable".format(file_format))
+        cid = quote(self.meta.id, safe="")
+        promote_catalog(
+            self._token,
+            self._base_url,
+            cid,
+            {
+                "id": cid,
+                "path": self.meta.path,
+                "type": "PHYSICAL_DATASET",
+                "entityType": "dataset",
+                "format": format_dict,
+            },
+            self._ssl_verify,
+        )
 
     def __dir__(self):
         if len(self.keys()) == 0 and "meta" in self.__dict__:
