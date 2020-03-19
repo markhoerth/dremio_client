@@ -57,3 +57,8 @@ History
 
 * add promote endpoint
 * update versions from pyup
+
+0.10.0 (2020-03-19)
+-------------------
+
+* fix ssl verify flag in cli
