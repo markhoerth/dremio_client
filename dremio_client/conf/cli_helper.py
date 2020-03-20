@@ -34,4 +34,4 @@ def get_base_url_token(args=None):
     port = ":" + str(config["port"].get(int))
     base_url = "http{}://{}{}".format(ssl, host, port)
     token = auth(base_url, config)
-    return base_url, token
+    return base_url, token, config["verify"].get()

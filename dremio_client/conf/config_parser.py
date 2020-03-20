@@ -30,7 +30,7 @@ import confuse
 def _get_env_args():
     args = dict()
     for k, v in os.environ.items():
-        if "DREMIO_" in k:
+        if "DREMIO_" in k and k != "DREMIO_CLIENTDIR":
             name = k.replace("DREMIO_", "").lower().replace("_", ".")
             args[name] = v
     return args
