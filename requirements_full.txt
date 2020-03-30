@@ -1,7 +1,7 @@
 attrs==19.3.0
 Click>=6.0
 confuse==1.0.0
-pandas==1.0.2
+pandas==1.0.3
 pyarrow>=0.15.0
 requests-futures==1.0.0
 requests>=2.21.0
