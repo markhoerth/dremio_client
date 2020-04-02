@@ -28,6 +28,7 @@ from .model.endpoints import (
     catalog,
     catalog_item,
     collaboration_tags,
+    set_collaboration_tags,
     collaboration_wiki,
     create_queue,
     create_reflection,
@@ -197,6 +198,20 @@ class SimpleClient(object):
         """
         return collaboration_tags(self._token, self._base_url, cid, ssl_verify=self._ssl_verify)
 
+    def set_collaboration_tag(self, cid, tags):
+        """ returns a list of tags for catalog entity
+
+        :param cid: catalog entity id
+        :param tags: string list
+        :raise: DremioBadRequestException if tags can't exist on this entity
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioPermissionException user does not have permission
+        :raise: DremioNotFoundException user could not be found
+        :return: list of tags
+        """
+        return set_collaboration_tags(self._token, self._base_url, cid, tags, ssl_verify=self._ssl_verify)
+
+
     def collaboration_wiki(self, cid):
         """ returns a wiki details for catalog entity
 
@@ -263,6 +278,7 @@ class SimpleClient(object):
         :param json: json document for new catalog entity
         :return: updated catalog entity
         """
+
         return promote_catalog(self._token, self._base_url, cid, json, ssl_verify=self._ssl_verify)
 
     def delete_catalog(self, cid, tag):
