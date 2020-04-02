@@ -211,7 +211,6 @@ class SimpleClient(object):
         """
         return set_collaboration_tags(self._token, self._base_url, cid, tags, ssl_verify=self._ssl_verify)
 
-
     def collaboration_wiki(self, cid):
         """ returns a wiki details for catalog entity
 
@@ -278,7 +277,6 @@ class SimpleClient(object):
         :param json: json document for new catalog entity
         :return: updated catalog entity
         """
-
         return promote_catalog(self._token, self._base_url, cid, json, ssl_verify=self._ssl_verify)
 
     def delete_catalog(self, cid, tag):
