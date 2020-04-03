@@ -744,7 +744,7 @@ class Dataset(Catalog):
         )
 
     def query(self):
-        return self.sql("select * from {}")
+        return self.sql("select * from "+'.'.join('"{0}"'.format(w) for w in self.meta.path))
 
     def sql(self, sql):
         return self._flight_endpoint(sql)
