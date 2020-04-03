@@ -168,7 +168,7 @@ class MetadataPolicy(object):
 @attr.s
 class AccessControl(object):
     id = attr.ib(default=None)
-    permission = attr.ib(default=None)
+    permissions = attr.ib(default=None)
 
     def to_json(self):
         return json.dumps(attr.asdict(self))
@@ -587,7 +587,7 @@ class Root(Catalog):
 def _get_acl(acl):
     if not acl:
         return
-    return [AccessControl(ac.get("id"), ac.get("permission")) for ac in acl]
+    return [AccessControl(ac.get("id"), ac.get("permissions")) for ac in acl]
 
 
 def _get_acls(acl):
