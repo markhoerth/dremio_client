@@ -743,8 +743,11 @@ class Dataset(Catalog):
             accessControlList=_get_acls(kwargs.get("accessControlList")),
         )
 
+    def get_table(self):
+        return '.'.join('"{0}"'.format(w) for w in self.meta.path)
+
     def query(self):
-        return self.sql("select * from "+'.'.join('"{0}"'.format(w) for w in self.meta.path))
+        return self.sql("select * from "+self.get_table())
 
     def sql(self, sql):
         return self._flight_endpoint(sql)
