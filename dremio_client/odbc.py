@@ -62,6 +62,7 @@ try:
         :param password: Password on Dremio
         :return: arrow flight client
         """
+        _get_driver_name()
         c = pyodbc.connect(
             "Driver={};ConnectionType=Direct;HOST={};PORT={};AuthenticationType=Plain;UID={};PWD={}".format(
                 _DRIVER, hostname, port, username, password
