@@ -46,7 +46,9 @@ def _get(url, token, details="", ssl_verify=True):
 
 
 def _post(url, token, json=None, details="", ssl_verify=True):
-    r = requests.post(url, headers=_get_headers(token), verify=ssl_verify, json=jsonlib.loads(json))
+    if isinstance(json, str):
+        json=jsonlib.loads(json)
+    r = requests.post(url, headers=_get_headers(token), verify=ssl_verify, json=json)
     return _check_error(r, details)
 
 
@@ -56,7 +58,9 @@ def _delete(url, token, details="", ssl_verify=True):
 
 
 def _put(url, token, json=None, details="", ssl_verify=True):
-    r = requests.put(url, headers=_get_headers(token), verify=ssl_verify, json=jsonlib.loads(json))
+    if isinstance(json, str):
+        json=jsonlib.loads(json)
+    r = requests.put(url, headers=_get_headers(token), verify=ssl_verify, json=json)
     return _check_error(r, details)
 
 
