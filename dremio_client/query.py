@@ -62,7 +62,7 @@ def query(
     if method == "odbc" or failed:
         try:
             return _odbc_query(sql, hostname=hostname, port=odbc_port, username=username, password=password)
-        except NotImplementedError:
+        except Exception:
             logging.warning("Unable to run query as odbc, downgrading to rest")
     results = _rest_query(token, base_url, sql, ssl_verify=ssl_verify)
     if pandas and not NO_PANDAS:
