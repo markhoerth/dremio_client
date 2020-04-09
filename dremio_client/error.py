@@ -22,6 +22,8 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
+
 class DremioException(Exception):
     """
     base dremio exception
