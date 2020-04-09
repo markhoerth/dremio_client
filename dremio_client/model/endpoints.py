@@ -74,7 +74,7 @@ def _check_error(r, details=""):
         except:  # NOQA
             return r.text
     if code == 400:
-        raise DremioBadRequestException("Requested object does not exist on entity " + details, error)
+        raise DremioBadRequestException("Requested object does not exist on entity " + details, error, r)
     if code == 401:
         raise DremioUnauthorizedException("Unauthorized on api endpoint " + details, error)
     if code == 403:

@@ -47,4 +47,7 @@ class DremioNotFoundException(DremioException):
 
 
 class DremioBadRequestException(DremioException):
+    def __init__(self, msg, original_exception, response):
+        DremioException.__init__(self,msg, original_exception)
+        self.response = response
     pass
