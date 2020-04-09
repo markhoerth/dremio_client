@@ -70,7 +70,7 @@ def test_catalog(requests_mock):
     requests_mock.get("https://example.com/api/v3/catalog/71373b4d-b284-4007-bdc1-2c4d245563ec", text=txt)
     with open("tests/data/nyctaxi.json", "r+") as f:
         txt = json.dumps(json.load(f))
-    requests_mock.get("https://example.com/api/v3/catalog/by-path/testsource/nyctaxi", text=txt)
+    requests_mock.get("https://example.com/api/v3/catalog/by-path/testsource/%22nyctaxi%22", text=txt)
 
     token = "12345"
     c = catalog(token, "https://example.com", print)
