@@ -62,3 +62,8 @@ History
 -------------------
 
 * fix ssl verify flag in cli
+
+0.11.0 (2020-04-09)
+-------------------
+
+* a number of bug fixes and improvements from the community
