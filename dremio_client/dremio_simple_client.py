@@ -420,4 +420,4 @@ class SimpleClient(object):
         return modify_rules(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
 
     def graph(self, cid):
-            return graph(self._token, self._base_url, cid, ssl_verify=self._ssl_verify)
+        return graph(self._token, self._base_url, cid, ssl_verify=self._ssl_verify)
