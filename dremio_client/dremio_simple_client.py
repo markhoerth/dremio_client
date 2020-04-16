@@ -36,6 +36,7 @@ from .model.endpoints import (
     delete_personal_access_token,
     delete_queue,
     delete_reflection,
+    graph,
     group,
     job_results,
     job_status,
@@ -417,3 +418,6 @@ class SimpleClient(object):
         :return: result object
         """
         return modify_rules(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
+
+    def graph(self, cid):
+            return graph(self._token, self._base_url, cid, ssl_verify=self._ssl_verify)
