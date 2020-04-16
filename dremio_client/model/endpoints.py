@@ -608,3 +608,18 @@ def _raise_for_status(self):
         return HTTPError(http_error_msg, response=self), self.status_code, reason
     else:
         return None, self.status_code, reason
+
+def graph(token, base_url, cid=None, ssl_verify=True):
+    """Retrieves graph information about a specific catalog entity by id
+
+    https://docs.dremio.com/rest-api/catalog/get-catalog-id-graph.html
+
+    :param token: auth token from previous login attempt
+    :param base_url: base Dremio url
+    :param cid: unique dremio id for resource
+    :param ssl_verify: ignore ssl errors if False
+    :return: json of resource
+    """
+    if cid is None:
+        raise TypeError("resource id can't be None for a graph call")
+    return _get(base_url + "/api/v3/catalog/{}/graph".format(cid), token, ssl_verify=ssl_verify)
