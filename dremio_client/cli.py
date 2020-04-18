@@ -564,10 +564,6 @@ def delete_reflection(args, rid):
     click.echo(json.dumps(x))
 
 
-if __name__ == "__main__":
-    sys.exit(cli())  # pragma: no cover
-
-
 @cli.command()
 @click.option("-c", "--cid", help="id of a given catalog item")
 @click.pass_obj
@@ -583,3 +579,6 @@ def graph(args, cid):
     x = _graph(token, base_url, cid, ssl_verify=verify)
     click.echo(json.dumps(x))
     
+
+if __name__ == "__main__":
+    sys.exit(cli())  # pragma: no cover
