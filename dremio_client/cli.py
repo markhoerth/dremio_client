@@ -569,7 +569,6 @@ if __name__ == "__main__":
 
 
 @cli.command()
-@click.argument("path", nargs=-1)
 @click.option("-c", "--cid", help="id of a given catalog item")
 @click.pass_obj
 def graph(args, cid):
