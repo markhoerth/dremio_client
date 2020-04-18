@@ -45,6 +45,7 @@ from .model.endpoints import (
     delete_personal_access_token as _delete_personal_access_token,
     delete_queue as _delete_queue,
     delete_reflection as _delete_reflection,
+    graph as _graph,
     group as _group,
     job_results as _job_results,
     job_status as _job_status,
@@ -565,3 +566,20 @@ def delete_reflection(args, rid):
 
 if __name__ == "__main__":
     sys.exit(cli())  # pragma: no cover
+
+
+@cli.command()
+@click.argument("path", nargs=-1)
+@click.option("-c", "--cid", help="id of a given catalog item")
+@click.pass_obj
+def graph(args, cid):
+    """
+    return the parent/child details of a given item
+
+    provide cid
+    if cid is not specified it causes an error
+
+    """
+    base_url, token, verify = get_base_url_token(args)
+    x = _graph(token, base_url, cid, ssl_verify=verify)
+    click.echo(json.dumps(x))
