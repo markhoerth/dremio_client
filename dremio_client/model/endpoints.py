@@ -76,11 +76,11 @@ def _check_error(r, details=""):
     if code == 400:
         raise DremioBadRequestException("Requested object does not exist on entity " + details, error, r)
     if code == 401:
-        raise DremioUnauthorizedException("Unauthorized on api endpoint " + details, error)
+        raise DremioUnauthorizedException("Unauthorized on api endpoint " + details, error, r)
     if code == 403:
-        raise DremioPermissionException("Not permissioned to view entity at " + details, error)
+        raise DremioPermissionException("Not permissioned to view entity at " + details, error, r)
     if code == 404:
-        raise DremioNotFoundException("No entity exists at " + details, error)
+        raise DremioNotFoundException("No entity exists at " + details, error, r)
     raise DremioException("unknown error", error)
 
 
