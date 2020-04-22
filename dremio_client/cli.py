@@ -22,7 +22,6 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-
 """Console script for dremio_client."""
 import os
 import sys
@@ -565,7 +564,7 @@ def delete_reflection(args, rid):
 
 
 @cli.command()
-@click.argument("-c", "--cid", help="id of a given catalog item")
+@click.argument("cid", nargs=1, required=True)
 @click.pass_obj
 def graph(args, cid):
     """
