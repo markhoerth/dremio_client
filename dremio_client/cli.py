@@ -565,7 +565,7 @@ def delete_reflection(args, rid):
 
 
 @cli.command()
-@click.option("-c", "--cid", help="id of a given catalog item")
+@click.argument("-c", "--cid", help="id of a given catalog item")
 @click.pass_obj
 def graph(args, cid):
     """
