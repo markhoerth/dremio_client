@@ -32,7 +32,7 @@ def _get_env_args():
     for k, v in os.environ.items():
         if "DREMIO_" in k and k != "DREMIO_CLIENTDIR":
             name = k.replace("DREMIO_", "").lower().replace("_", ".")
-            if name == "port":
+            if name == "port" or name == "auth.timeout":
                 v = int(v)
             elif name == "ssl":
                 v = v.lower() in ["true", "1", "t", "y", "yes", "yeah", "yup", "certainly", "uh-huh"]

@@ -565,7 +565,7 @@ def delete_reflection(args, rid):
 
 
 @cli.command()
-@click.option("-c", "--cid", help="id of a given catalog item")
+@click.argument("cid", nargs=1, required=True)
 @click.pass_obj
 def graph(args, cid):
     """
@@ -578,8 +578,7 @@ def graph(args, cid):
     base_url, token, verify = get_base_url_token(args)
     x = _graph(token, base_url, cid, ssl_verify=verify)
     click.echo(json.dumps(x))
-    
+
 
 if __name__ == "__main__":
     sys.exit(cli())  # pragma: no cover
-    
