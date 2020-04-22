@@ -67,3 +67,9 @@ History
 -------------------
 
 * a number of bug fixes and improvements from the community
+
+0.12.0 (2020-04-22)
+-------------------
+
+* add graph endpoint and cli flag
+* add more detailed exception handling
