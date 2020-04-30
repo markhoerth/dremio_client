@@ -527,6 +527,11 @@ class Catalog(dict):
     def remove(self):
         return delete_catalog(self._token, self._base_url, self.meta.id, self.meta.tag, self._ssl_verify)
 
+    def get_item(self, cid=None, path=None):
+        result = self._catalog_item(cid, path)
+        _, obj = create(result, self._token, self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
+        return obj
+
 
 def _put(self):
     cid = self.meta.id
