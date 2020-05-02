@@ -31,6 +31,7 @@ from ..error import DremioException
 from ..util import refresh_metadata
 from .endpoints import (
     catalog_item,
+    graph,
     collaboration_tags,
     collaboration_wiki,
     delete_catalog,
@@ -742,6 +743,12 @@ class Dataset(Catalog):
             approximateStatisticsAllowed=kwargs.get("approximateStatisticsAllowed"),
             accessControlList=_get_acls(kwargs.get("accessControlList")),
         )
+
+    def get_graph(self):
+        try:
+            return graph(self._token, self._base_url, self.meta.id, ssl_verify=self._ssl_verify)
+        except Exception:  # NOQA
+            return graph(self._token, self._base_url, path=self.meta.path, ssl_verify=self._ssl_verify)
 
     def get_table(self):
         return '.'.join('"{0}"'.format(w) for w in self.meta.path)
