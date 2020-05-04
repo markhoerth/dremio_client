@@ -33,6 +33,7 @@ from .model.data import (
     make_vote,
     make_wlm_queue,
     make_wlm_rule,
+    _get_item,
 )
 from .model.endpoints import (
     group,
@@ -184,3 +185,6 @@ class DremioClient(object):
         :return: personal access token list
         """
         return personal_access_token(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+
+    def get_item(self, cid=None, path=None):
+        return _get_item(self._catalog, cid, path)

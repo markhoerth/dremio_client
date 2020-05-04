@@ -25,6 +25,7 @@
 
 from .query import refresh_metadata, run, run_async
 from .promote import promote_catalog
+from .refresh import refresh_vds_reflection_by_path
 
 
-__all__ = ["run", "run_async", "refresh_metadata", "promote_catalog"]
+__all__ = ["run", "run_async", "refresh_metadata", "promote_catalog", "refresh_vds_reflection_by_path"]
