@@ -528,6 +528,12 @@ class Catalog(dict):
         return delete_catalog(self._token, self._base_url, self.meta.id, self.meta.tag, self._ssl_verify)
 
 
+def _get_item(catalog, cid=None, path=None):
+    result = catalog._catalog_item(cid, path)
+    _, obj = create(result, catalog._token, catalog._base_url, catalog._flight_endpoint, ssl_verify=catalog._ssl_verify)
+    return obj
+
+
 def _put(self):
     cid = self.meta.id
     result = update_catalog(self._token, self._base_url, cid, attr.asdict(self.meta), self._ssl_verify)
