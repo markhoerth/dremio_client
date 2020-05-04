@@ -93,7 +93,7 @@ def catalog_item(token, base_url, cid=None, path=None, ssl_verify=True):
     :param token: auth token from previous login attempt
     :param base_url: base Dremio url
     :param cid: unique dremio id for resource
-    :param path: path (/adls/nyctaxi/filename) for a resource
+    :param path: list ['space', 'folder', 'vds']
     :param ssl_verify: ignore ssl errors if False
     :return: json of resource
     """
@@ -608,6 +608,7 @@ def _raise_for_status(self):
         return HTTPError(http_error_msg, response=self), self.status_code, reason
     else:
         return None, self.status_code, reason
+
 
 def graph(token, base_url, cid=None, ssl_verify=True):
     """Retrieves graph information about a specific catalog entity by id

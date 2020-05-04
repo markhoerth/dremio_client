@@ -57,7 +57,7 @@ from .model.endpoints import (
     wlm_queues,
     wlm_rules,
 )
-from .util import refresh_metadata, run, run_async
+from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path
 
 
 class SimpleClient(object):
@@ -421,3 +421,11 @@ class SimpleClient(object):
 
     def graph(self, cid):
         return graph(self._token, self._base_url, cid, ssl_verify=self._ssl_verify)
+
+    def refresh_vds_reflection_by_path(self, path):
+        """ Refresh the metadata for a given physical dataset
+
+        :param path: list ['space', 'folder', 'vds']
+        :return: None
+        """
+        return refresh_vds_reflection_by_path(self, path)
