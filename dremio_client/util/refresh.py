@@ -5,7 +5,7 @@ def refresh_vds_reflection_by_path(client, path=None):
     Script will find which pds is responsible for the reflection and
     trigger the refresh based on pds
 
-    :param path: string of vds 'space.vds_name'
+    :param path: list ['space', 'folder', 'vds']
     """
     datasets = []
     datasets.append(client.catalog_item(cid=None, path=path))
