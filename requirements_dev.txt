@@ -7,7 +7,7 @@ pytest==5.4.1
 pre-commit==2.3.0
 pytest-cov==2.8.1
 pytest-runner==5.2
-requests-mock==1.7.0
+requests-mock==1.8.0
 Sphinx==3.0.3
 tox==3.15.0
 Sphinx==3.0.3
