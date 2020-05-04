@@ -425,9 +425,7 @@ class SimpleClient(object):
     def refresh_vds_reflection_by_path(self, path):
         """ Refresh the metadata for a given physical dataset
 
-        :param table: the physical dataset to be refreshed
-        :raise: DremioException if job failed
-        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :param path: list ['space', 'folder', 'vds']
         :return: None
         """
         return refresh_vds_reflection_by_path(self, path)
