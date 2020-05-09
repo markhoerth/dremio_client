@@ -73,3 +73,8 @@ History
 
 * add graph endpoint and cli flag
 * add more detailed exception handling
+
+0.12.1 (2020-05-04)
+-------------------
+
+* few bug fixes and API extensions
