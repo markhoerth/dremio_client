@@ -431,8 +431,8 @@ class SimpleClient(object):
         return refresh_vds_reflection_by_path(self, path)
 
     def refresh_reflections_of_one_dataset(self, path):
-        """ Refresh the reflection for a given dataset 
-        Refresh will disable and enable reflection. 
+        """ Refresh the reflection for a given dataset
+        Refresh will disable and enable reflection.
         As long reflection will be reenabled all queries will be redirected to source dataset.
         All VDS Reflection derived from this VDS will be refreshed as well
 
