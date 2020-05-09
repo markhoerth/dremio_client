@@ -50,7 +50,6 @@ def _reenable_reflection(client, refl_json):
     # get new tag version for update
 
     data = client.reflection(refl_id)
-    #data = res.json()
 
     for key in key_to_remove:
         data.pop(key)
@@ -73,5 +72,5 @@ def refresh_reflections_of_one_dataset(client, path=None):
 
     for reflection in reflections['data']:
         if dataset_id == reflection['datasetId']:
-            if reflection['enabled'] == True:
+            if reflection['enabled']:
                 _reenable_reflection(client, reflection)
