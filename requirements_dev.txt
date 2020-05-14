@@ -4,7 +4,7 @@ coverage==5.1
 flake8==3.8.1
 pip==20.1
 pytest==5.4.2
-pre-commit==2.3.0
+pre-commit==2.4.0
 pytest-cov==2.8.1
 pytest-runner==5.2
 requests-mock==1.8.0
