@@ -32,7 +32,7 @@ def _parents(client, parents):
     _refresh_by_path(client, datasets)
 
 
-def _reenable_reflection(client, refl_json):
+def _disable_reflection(client, refl_json):
     data = refl_json
 
     key_to_remove = ['updatedAt', 'createdAt',
@@ -44,10 +44,18 @@ def _reenable_reflection(client, refl_json):
     data['enabled'] = False
     data = json.dumps(data)
 
-    # disable reflesction
-    client.modify_reflection(refl_id, data)
+    return client.modify_reflection(refl_id, data)
 
-    # get new tag version for update
+
+def _enable_reflection(client, refl_json):
+    data = refl_json
+
+    key_to_remove = ['updatedAt', 'createdAt',
+                     'currentSizeBytes', 'totalSizeBytes']
+    for key in key_to_remove:
+        data.pop(key)
+
+    refl_id = data['id']
 
     data = client.reflection(refl_id)
 
@@ -57,7 +65,7 @@ def _reenable_reflection(client, refl_json):
     data = json.dumps(data)
 
     # enable reflection, will trigger an update
-    print(client.modify_reflection(refl_id, data)['enabled'])
+    return client.modify_reflection(refl_id, data)['enabled']
 
 
 def refresh_reflections_of_one_dataset(client, path=None):
@@ -73,4 +81,5 @@ def refresh_reflections_of_one_dataset(client, path=None):
     for reflection in reflections['data']:
         if dataset_id == reflection['datasetId']:
             if reflection['enabled']:
-                _reenable_reflection(client, reflection)
+                _disable_reflection(client, reflection)
+                _enable_reflection(client, reflection)

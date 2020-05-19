@@ -438,6 +438,7 @@ class SimpleClient(object):
 
         :param path: list ['space', 'folder', 'vds']
         :return: None
+
         """
 
         return refresh_reflections_of_one_dataset(self, path)
