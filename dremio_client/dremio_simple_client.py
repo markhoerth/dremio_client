@@ -57,7 +57,7 @@ from .model.endpoints import (
     wlm_queues,
     wlm_rules,
 )
-from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path
+from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
 
 
 class SimpleClient(object):
@@ -423,9 +423,22 @@ class SimpleClient(object):
         return graph(self._token, self._base_url, cid, ssl_verify=self._ssl_verify)
 
     def refresh_vds_reflection_by_path(self, path):
-        """ Refresh the metadata for a given physical dataset
+        """ Refresh the reflection for a given virtual dataset
 
         :param path: list ['space', 'folder', 'vds']
         :return: None
         """
         return refresh_vds_reflection_by_path(self, path)
+
+    def refresh_reflections_of_one_dataset(self, path):
+        """ Refresh the reflection for a given dataset
+        Refresh will disable and enable reflection.
+        As long reflection will be reenabled all queries will be redirected to source dataset.
+        All VDS Reflection derived from this VDS will be refreshed as well
+
+        :param path: list ['space', 'folder', 'vds']
+        :return: None
+
+        """
+
+        return refresh_reflections_of_one_dataset(self, path)
