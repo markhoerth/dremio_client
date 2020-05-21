@@ -78,3 +78,9 @@ History
 -------------------
 
 * few bug fixes and API extensions
+
+0.13.0 (2020-05-21)
+-------------------
+
+* add version flag
+* upgrades and additions to some commands
