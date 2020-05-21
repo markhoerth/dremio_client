@@ -400,15 +400,20 @@ def promote_catalog(args, data, cid):
 
 
 @cli.command()
-@click.argument("cid", nargs=1, required=True)
-@click.option("-t", "--tag", help="current tag, for concurrency")
+@click.option("--cid", "-c", help="unique id for a catalog entity")
+@click.option("--path", "-p", help="path of a catalog entity")
 @click.pass_obj
-def delete_catalog(args, cid, tag):
+def delete_catalog(args, cid, path):
     """
-    delete a catalog entity given by cid and tag version
+    delete a catalog entity given by cid or path
 
+    warning, this process is destructive and permanent
     """
     base_url, token, verify = get_base_url_token(args)
+    res = _catalog_item(token, base_url, None, [path.replace(".", "/")], ssl_verify=verify)
+    tag = res["tag"]
+    if path:
+        cid = res["id"]
     x = _delete_catalog(token, base_url, cid, tag, ssl_verify=verify)
     click.echo(json.dumps(x))
 
