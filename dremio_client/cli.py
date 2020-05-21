@@ -31,6 +31,7 @@ import click
 
 import simplejson as json
 
+from . import __version__
 from .conf import get_base_url_token
 from .error import DremioNotFoundException
 from .model.endpoints import (
@@ -69,6 +70,13 @@ from .model.endpoints import (
 from .util.query import run
 
 
+def print_version(ctx, param, value):
+    if not value or ctx.resilient_parsing:
+        return
+    click.echo(__version__)
+    ctx.exit()
+
+
 @click.group()
 @click.option("--config", type=click.Path(exists=True, dir_okay=True, file_okay=False), help="Custom config file.")
 @click.option("-h", "--hostname", help="Hostname if different from config file")
@@ -77,6 +85,7 @@ from .util.query import run
 @click.option("-u", "--username", help="username if different from config file")
 @click.option("-p", "--password", help="password if different from config file")
 @click.option("--skip-verify", is_flag=True, help="skip verificatoin of ssl cert")
+@click.option("--version", is_flag=True, callback=print_version, expose_value=False, is_eager=True)
 @click.pass_context
 def cli(ctx, config, hostname, port, ssl, username, password, skip_verify):
     if config:
