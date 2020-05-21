@@ -42,7 +42,6 @@ from .model.endpoints import (
     collaboration_wiki as _collaboration_wiki,
     create_queue as _create_queue,
     create_reflection as _create_reflection,
-    delete_catalog as _delete_catalog,
     delete_personal_access_token as _delete_personal_access_token,
     delete_queue as _delete_queue,
     delete_reflection as _delete_reflection,
@@ -68,6 +67,7 @@ from .model.endpoints import (
     wlm_rules as _wlm_rules,
 )
 from .util.query import run
+from .util.delete import delete_catalog as _delete_catalog
 
 
 def print_version(ctx, param, value):
@@ -410,11 +410,7 @@ def delete_catalog(args, cid, path):
     warning, this process is destructive and permanent
     """
     base_url, token, verify = get_base_url_token(args)
-    res = _catalog_item(token, base_url, None, [path.replace(".", "/")], ssl_verify=verify)
-    tag = res["tag"]
-    if path:
-        cid = res["id"]
-    x = _delete_catalog(token, base_url, cid, tag, ssl_verify=verify)
+    x = _delete_catalog(token, base_url, verify, cid, path)
     click.echo(json.dumps(x))
 
 

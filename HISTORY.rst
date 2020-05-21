@@ -84,3 +84,8 @@ History
 
 * add version flag
 * upgrades and additions to some commands
+
+0.13.1 (2020-05-21)
+-------------------
+
+* simplify delete cli command
