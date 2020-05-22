@@ -410,7 +410,7 @@ def delete_catalog(args, cid, path):
     warning, this process is destructive and permanent
     """
     base_url, token, verify = get_base_url_token(args)
-    x = _delete_catalog(token, base_url, verify, cid, path)
+    x = _delete_catalog(base_url, token, verify, cid, path)
     click.echo(json.dumps(x))
 
 
