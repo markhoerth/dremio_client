@@ -89,3 +89,8 @@ History
 -------------------
 
 * simplify delete cli command
+
+0.13.2 (2020-05-22)
+-------------------
+
+* bugfixes
