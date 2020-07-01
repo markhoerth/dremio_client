@@ -65,17 +65,24 @@ class DremioClient(object):
         )
         self._flight_port = config["flight"]["port"].get(int)
         self._odbc_port = config["odbc"]["port"].get(int)
+        self._rest_port = config["rest"]["port"].get(int)
 
         self._username = config["auth"]["username"].get()
         self._password = config["auth"]["password"].get()
-        self._token = auth(self._base_url, config)
+        self._rest_url = (
+            ("https" if config["ssl"].get(bool) else "http")
+            + "://"
+            + self._hostname
+            + (":{}".format(self._rest_port) if port else "")
+        )
+        self._token = auth(self._rest_url, config)
         self._ssl_verify = config["verify"].get(bool)
-        self._catalog = catalog(self._token, self._base_url, self.query, self._ssl_verify)
+        self._catalog = catalog(self._token, self._rest_url, self.query, self._ssl_verify)
         self._reflections = list()
         self._wlm_queues = list()
         self._wlm_rules = list()
         self._votes = list()
-        self._simple = SimpleClient(config)
+        #self._simple = SimpleClient(config)  # took this off because I didn't know how it was intended to be used for now or in the future
 
     def simple(self):
         return self._simple
@@ -132,6 +139,7 @@ class DremioClient(object):
         return query(
             self._token,
             self._base_url,
+            self._rest_url,
             self._hostname,
             self._odbc_port,
             self._flight_port,
