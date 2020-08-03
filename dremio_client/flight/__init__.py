@@ -26,7 +26,6 @@ try:
     import pyarrow as pa
     from pyarrow import flight
     from .flight_auth import HttpDremioClientAuthHandler
-    from pyarrow.compat import tobytes
 
     def connect(
         hostname="localhost", port=47470, username="dremio", password="dremio123", tls_root_certs_filename=None
@@ -81,7 +80,7 @@ try:
         if not client:
             client = connect(hostname, port, username, password, tls_root_certs_filename)
 
-        info = client.get_flight_info(flight.FlightDescriptor.for_command(tobytes(sql)))
+        info = client.get_flight_info(flight.FlightDescriptor.for_command(sql))
         reader = client.do_get(info.endpoints[0].ticket)
         batches = []
         while True:
