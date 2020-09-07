@@ -94,3 +94,10 @@ History
 -------------------
 
 * bugfixes
+
+0.13.3 (2020-09-07)
+-------------------
+
+* fix wlm bug
+* bump dependencies
+
