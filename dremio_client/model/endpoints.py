@@ -197,7 +197,7 @@ def reflection(token, base_url, reflectionid, ssl_verify=True):
 def wlm_queues(token, base_url, ssl_verify=True):
     """fetch all wlm queues
 
-    https://docs.dremio.com/rest-api/reflections/get-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/get-wlm-queue.html
 
     :param token: auth token
     :param base_url: sql query
@@ -210,7 +210,7 @@ def wlm_queues(token, base_url, ssl_verify=True):
 def wlm_rules(token, base_url, ssl_verify=True):
     """fetch all wlm rules
 
-    https://docs.dremio.com/rest-api/reflections/get-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/get-wlm-rule.html
 
     :param token: auth token
     :param base_url: sql query
@@ -530,7 +530,7 @@ def cancel_job(token, base_url, jid, ssl_verify=True):
 def modify_queue(token, base_url, queueid, json, ssl_verify=True):
     """update a single queue by id
 
-    https://docs.dremio.com/rest-api/reflections/put-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/put-wlm-queue.html
 
     :param token: auth token
     :param base_url: sql query
@@ -539,13 +539,13 @@ def modify_queue(token, base_url, queueid, json, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    return _put(base_url + "/api/v3/queue/{}".format(queueid), token, json, ssl_verify=ssl_verify)
+    return _put(base_url + "/api/v3/wlm/queue/{}".format(queueid), token, json, ssl_verify=ssl_verify)
 
 
 def create_queue(token, base_url, json, ssl_verify=True):
     """create a single queue
 
-    https://docs.dremio.com/rest-api/reflections/post-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/post-wlm-queue.html
 
     :param token: auth token
     :param base_url: sql query
@@ -553,13 +553,13 @@ def create_queue(token, base_url, json, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    return _post(base_url + "/api/v3/queue/", token, json, ssl_verify=ssl_verify)
+    return _post(base_url + "/api/v3/wlm/queue/", token, json, ssl_verify=ssl_verify)
 
 
 def delete_queue(token, base_url, queueid, ssl_verify=True):
     """delete a single queue by id
 
-    https://docs.dremio.com/rest-api/reflections/delete-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/delete-wlm-queue.html
 
     :param token: auth token
     :param base_url: sql query
@@ -567,7 +567,7 @@ def delete_queue(token, base_url, queueid, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    _delete(base_url + "/api/v3/queue/{}".format(queueid), token, ssl_verify=ssl_verify)
+    _delete(base_url + "/api/v3/wlm/queue/{}".format(queueid), token, ssl_verify=ssl_verify)
 
 
 def modify_rules(token, base_url, json, ssl_verify=True):
@@ -575,7 +575,7 @@ def modify_rules(token, base_url, json, ssl_verify=True):
 
     The order of the rules is the order in which they will be applied. If a rule isn't included it will be deleted
     new ones will be created
-    https://docs.dremio.com/rest-api/reflections/put-wlm-rule.html
+    https://docs.dremio.com/rest-api/wlm/put-wlm-rule.html
 
     :param token: auth token
     :param base_url: sql query
@@ -583,7 +583,7 @@ def modify_rules(token, base_url, json, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    return _put(base_url + "/api/v3/rule/", token, json, ssl_verify=ssl_verify)
+    return _put(base_url + "/api/v3/wlm/rule/", token, json, ssl_verify=ssl_verify)
 
 
 def _raise_for_status(self):
