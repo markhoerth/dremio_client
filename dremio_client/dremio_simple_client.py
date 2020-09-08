@@ -55,6 +55,7 @@ from .model.endpoints import (
     user,
     votes,
     wlm_queues,
+    wlm_queue,
     wlm_rules,
 )
 from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
@@ -115,6 +116,22 @@ class SimpleClient(object):
         :return: queues as a list of dicts
         """
         return wlm_queues(self._token, self._base_url, ssl_verify=self._ssl_verify)
+
+    def wlm_queue(self, qid=None, name=None):
+        """ return details for a queue
+
+        User must supply one of qid or name. qid takes precedence if both are supplied
+        .. note:: can only be run by admin
+        .. note:: Enterprise only
+
+        :param qid: queue id
+        :param name: queue name
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioPermissionException user does not have permission
+        :raise: DremioNotFoundException queue could not be found
+        :return: queue info as a dict
+        """
+        return wlm_queue(self._token, self._base_url, qid, name, ssl_verify=self._ssl_verify)
 
     def wlm_rules(self):
         """ return details all workload management rules

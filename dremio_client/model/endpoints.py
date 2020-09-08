@@ -207,6 +207,28 @@ def wlm_queues(token, base_url, ssl_verify=True):
     return _get(base_url + "/api/v3/wlm/queue", token, ssl_verify=ssl_verify)
 
 
+def wlm_queue(token, base_url, qid=None, name=None, ssl_verify=True):
+    """fetch wlm queue by id or name
+
+    https://docs.dremio.com/rest-api/wlm/get-wlm-queue.html
+
+    :param token: auth token
+    :param base_url: sql query
+    :param qid: unique queue id
+    :param name: name for a queue
+    :ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    if qid is None and name is None:
+        raise TypeError("both id and name cannot be None for a GET queue call")
+    if qid is not None:
+        endurl = base_url + "/api/v3/wlm/queue/{}".format(qid)
+        return _get(endurl, token, endurl, ssl_verify)
+    else:
+        endurl = base_url + "/api/v3/wlm/queue/by-name/{}".format(name)
+        return _get(endurl, token, endurl, ssl_verify)
+
+
 def wlm_rules(token, base_url, ssl_verify=True):
     """fetch all wlm rules
 
