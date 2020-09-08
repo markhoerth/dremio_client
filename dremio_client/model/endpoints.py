@@ -208,7 +208,8 @@ def wlm_queues(token, base_url, ssl_verify=True):
 
 
 def wlm_queue(token, base_url, qid=None, name=None, ssl_verify=True):
-    """fetch wlm queue by id or name 
+    """fetch wlm queue by id or name
+	
     https://docs.dremio.com/rest-api/wlm/get-wlm-queue.html
 
     :param token: auth token
