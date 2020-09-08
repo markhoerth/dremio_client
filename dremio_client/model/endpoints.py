@@ -228,7 +228,6 @@ def wlm_queue(token, base_url, qid=None, name=None, ssl_verify=True):
         return _get(endurl, token, endurl, ssl_verify)
 
 
-
 def wlm_rules(token, base_url, ssl_verify=True):
     """fetch all wlm rules
 
