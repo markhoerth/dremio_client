@@ -99,11 +99,46 @@ def catalog_item(token, base_url, cid=None, path=None, ssl_verify=True):
     """
     if cid is None and path is None:
         raise TypeError("both id and path can't be None for a catalog_item call")
-    idpath = (cid if cid else "") + ", " + (".".join(path) if path else "")
-    cpath = [quote(i, safe="") for i in path] if path else ""
-    endpoint = "/{}".format(cid) if cid else "/by-path/{}".format("/".join(cpath).replace('"', ""))
-    return _get(base_url + "/api/v3/catalog{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
+    if cid is not None:
+        endurl = base_url + "/api/v3/catalog/{}".format(cid)
+        return _get(endurl, token, endurl, ssl_verify=ssl_verify)
+    else:
+        endurl = base_url + "/api/v3/catalog/by-path/{}".format(path)
+        return _get(endurl, token, endurl, ssl_verify=ssl_verify)
 
+def get_catalog_by_id(token, base_url, cid, ssl_verify=True):
+    """fetch a specific catalog item by id or by path
+
+    https://docs.dremio.com/rest-api/catalog/get-catalog-id.html
+    https://docs.dremio.com/rest-api/catalog/get-catalog-path.html
+
+    :param token: auth token from previous login attempt
+    :param base_url: base Dremio url
+    :param cid: unique dremio id for resource
+    :param ssl_verify: ignore ssl errors if False
+    :return: json of resource
+    """
+    if cid is None:
+        raise TypeError("Id can't be None for a get_catalog_by_id call")
+    endurl = base_url + "/api/v3/catalog/{}".format(cid)
+    return _get(endurl, token, endurl, ssl_verify=ssl_verify)
+
+def get_catalog_by_path(token, base_url, cpath, ssl_verify=True):
+    """fetch a specific catalog item by id or by path
+
+    https://docs.dremio.com/rest-api/catalog/get-catalog-id.html
+    https://docs.dremio.com/rest-api/catalog/get-catalog-path.html
+
+    :param token: auth token from previous login attempt
+    :param base_url: base Dremio url
+    :param cpath: unique dremio path for resource
+    :param ssl_verify: ignore ssl errors if False
+    :return: json of resource
+    """
+    if cpath is None:
+        raise TypeError("Path can't be None for a get_catalog_by_path call")
+    endurl = base_url + "/api/v3/catalog/by-path/{}".format(cpath)
+    return _get(endurl, token, endurl, ssl_verify=ssl_verify)
 
 def catalog(token, base_url, ssl_verify=True):
     """
@@ -269,9 +304,12 @@ def user(token, base_url, uid=None, name=None, ssl_verify=True):
     """
     if uid is None and name is None:
         raise TypeError("both id and name can't be None for a user call")
-    idpath = (uid if uid else "") + ", " + (".".join(name) if name else "")
-    endpoint = "/{}".format(uid) if uid else "/by-name/{}".format("/".join(name).replace('"', ""))
-    return _get(base_url + "/api/v3/user{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
+    if uid is not None:
+        endurl = base_url + "/api/v3/user/{}".format(uid)
+        return _get(endurl, token, endurl, ssl_verify)
+    else:
+        endurl = base_url + "/api/v3/user/by-name/{}".format(name)
+        return _get(endurl, token, endurl, ssl_verify)
 
 
 def group(token, base_url, gid=None, name=None, ssl_verify=True):
@@ -287,10 +325,13 @@ def group(token, base_url, gid=None, name=None, ssl_verify=True):
     :return: result object
     """
     if gid is None and name is None:
-        raise TypeError("both id and name can't be None for a user call")
-    idpath = (gid if gid else "") + ", " + (".".join(name) if name else "")
-    endpoint = "/{}".format(gid) if gid else "/by-name/{}".format("/".join(name).replace('"', ""))
-    return _get(base_url + "/api/v3/group{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
+        raise TypeError("both id and name can't be None for a group call")
+    if gid is not None:
+        endurl = base_url + "/api/v3/group/{}".format(gid)
+        return _get(endurl, token, endurl, ssl_verify)
+    else:
+        endurl = base_url + "/api/v3/group/by-name/{}".format(name)
+        return _get(endurl, token, endurl, ssl_verify)
 
 
 def personal_access_token(token, base_url, uid, ssl_verify=True):
@@ -405,7 +446,10 @@ def delete_catalog(token, base_url, cid, tag, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: None
     """
-    return _delete(base_url + "/api/v3/catalog/{}?tag={}".format(cid, tag), token, ssl_verify=ssl_verify)
+    if tag is None:
+        return _delete(base_url + "/api/v3/catalog/{}".format(cid), token, ssl_verify=ssl_verify)
+    else:
+        return _delete(base_url + "/api/v3/catalog/{}?tag={}".format(cid, tag), token, ssl_verify=ssl_verify)
 
 
 def set_catalog(token, base_url, json, ssl_verify=True):
@@ -468,7 +512,7 @@ def set_personal_access_token(token, base_url, uid, label, lifetime=24, ssl_veri
     return _post(
         base_url + "/api/v3/user/{}/token".format(uid),
         token,
-        {"label": label, "lifeTime": 1000 * 60 * 60 * lifetime},
+        {"label": label, "millisecondsToExpire": 1000 * 60 * 60 * lifetime},
         ssl_verify=ssl_verify,
     )
 
