@@ -99,12 +99,10 @@ def catalog_item(token, base_url, cid=None, path=None, ssl_verify=True):
     """
     if cid is None and path is None:
         raise TypeError("both id and path can't be None for a catalog_item call")
-    if cid is not None:
-        endurl = base_url + "/api/v3/catalog/{}".format(cid)
-        return _get(endurl, token, endurl, ssl_verify=ssl_verify)
-    else:
-        endurl = base_url + "/api/v3/catalog/by-path/{}".format(path)
-        return _get(endurl, token, endurl, ssl_verify=ssl_verify)
+    idpath = (cid if cid else "") + ", " + (".".join(path) if path else "")
+    cpath = [quote(i, safe="") for i in path] if path else ""
+    endpoint = "/{}".format(cid) if cid else "/by-path/{}".format("/".join(cpath).replace('"', ""))
+    return _get(base_url + "/api/v3/catalog{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
 
 def get_catalog_by_id(token, base_url, cid, ssl_verify=True):
     """fetch a specific catalog item by id or by path
