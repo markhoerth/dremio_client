@@ -104,40 +104,6 @@ def catalog_item(token, base_url, cid=None, path=None, ssl_verify=True):
     endpoint = "/{}".format(cid) if cid else "/by-path/{}".format("/".join(cpath).replace('"', ""))
     return _get(base_url + "/api/v3/catalog{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
 
-def get_catalog_by_id(token, base_url, cid, ssl_verify=True):
-    """fetch a specific catalog item by id or by path
-
-    https://docs.dremio.com/rest-api/catalog/get-catalog-id.html
-    https://docs.dremio.com/rest-api/catalog/get-catalog-path.html
-
-    :param token: auth token from previous login attempt
-    :param base_url: base Dremio url
-    :param cid: unique dremio id for resource
-    :param ssl_verify: ignore ssl errors if False
-    :return: json of resource
-    """
-    if cid is None:
-        raise TypeError("Id can't be None for a get_catalog_by_id call")
-    endurl = base_url + "/api/v3/catalog/{}".format(cid)
-    return _get(endurl, token, endurl, ssl_verify=ssl_verify)
-
-def get_catalog_by_path(token, base_url, cpath, ssl_verify=True):
-    """fetch a specific catalog item by id or by path
-
-    https://docs.dremio.com/rest-api/catalog/get-catalog-id.html
-    https://docs.dremio.com/rest-api/catalog/get-catalog-path.html
-
-    :param token: auth token from previous login attempt
-    :param base_url: base Dremio url
-    :param cpath: unique dremio path for resource
-    :param ssl_verify: ignore ssl errors if False
-    :return: json of resource
-    """
-    if cpath is None:
-        raise TypeError("Path can't be None for a get_catalog_by_path call")
-    endurl = base_url + "/api/v3/catalog/by-path/{}".format(cpath)
-    return _get(endurl, token, endurl, ssl_verify=ssl_verify)
-
 def catalog(token, base_url, ssl_verify=True):
     """
     https://docs.dremio.com/rest-api/catalog/get-catalog.html populate the root dremio catalog

@@ -57,9 +57,7 @@ from .model.endpoints import (
     votes,
     wlm_queues,
     wlm_queue,
-    wlm_rules,
-    get_catalog_by_id,
-    get_catalog_by_path
+    wlm_rules
 )
 from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
 
@@ -92,12 +90,6 @@ class SimpleClient(object):
 
     def catalog_item(self, cid, path):
         return catalog_item(self._token, self._base_url, cid, path, ssl_verify=self._ssl_verify)
-
-    def catalog_item_by_id(self, cid):
-        return get_catalog_by_id(self._token, self._base_url, cid, ssl_verify=self._ssl_verify)
-
-    def catalog_item_by_path(self, path):
-        return get_catalog_by_path(self._token, self._base_url, path, ssl_verify=self._ssl_verify)
 
     def job_results(self, jobid):
         return job_results(self._token, self._base_url, jobid, ssl_verify=self._ssl_verify)
@@ -239,15 +231,15 @@ class SimpleClient(object):
         return set_collaboration_tags(self._token, self._base_url, cid, tags, ssl_verify=self._ssl_verify)
 
     def set_collaboration_wiki(self, cid, wiki):
-        """ returns a list of tags for catalog entity
+        """ returns a list of wiki for catalog entity
 
         :param cid: catalog entity id
         :param tags: string list
-        :raise: DremioBadRequestException if tags can't exist on this entity
+        :raise: DremioBadRequestException if wiki can't exist on this entity
         :raise: DremioUnauthorizedException if token is incorrect or invalid
         :raise: DremioPermissionException user does not have permission
         :raise: DremioNotFoundException user could not be found
-        :return: list of tags
+        :return: list of wikis
         """
         return set_collaboration_wiki(self._token, self._base_url, cid, wiki, ssl_verify=self._ssl_verify)
 
