@@ -488,4 +488,3 @@ class SimpleClient(object):
         :return: None
         """
         return delete_personal_access_token_without_userid(self._token, self._base_url, tid, ssl_verify=self._ssl_verify)
-

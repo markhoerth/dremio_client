@@ -664,4 +664,3 @@ def delete_personal_access_token_without_userid(token, base_url, tid=None, ssl_v
     """
     url = base_url + "/api/v3/token{}".format(("/" + tid) if tid else "")
     return _delete(url, token, url, ssl_verify=ssl_verify)
-
