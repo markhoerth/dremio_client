@@ -482,7 +482,7 @@ def set_personal_access_token(token, base_url, uid, label, lifetime=24, ssl_veri
 
 
 def delete_personal_access_token(token, base_url, uid, tid=None, ssl_verify=True):
-    """ create a pat for a given user
+    """ delete a pat for a given user
 
     https://docs.dremio.com/rest-api/user/delete-user-uid-token.html
 
@@ -654,3 +654,14 @@ def graph(token, base_url, cid=None, ssl_verify=True):
     if cid is None:
         raise TypeError("resource id can't be None for a graph call")
     return _get(base_url + "/api/v3/catalog/{}/graph".format(cid), token, ssl_verify=ssl_verify)
+
+def delete_personal_access_token_without_userid(token, base_url, tid=None, ssl_verify=True):
+    """ Deletes token(s). Similar to delete_personal_access_token but this doesn't need user-id
+
+    https://docs.dremio.com/rest-api/token/
+    :param tid: token id to delete a specific token. None to delete all.
+    :return: None
+    """
+    url = base_url + "/api/v3/token{}".format(("/" + tid) if tid else "")
+    return _delete(url, token, url, ssl_verify=ssl_verify)
+

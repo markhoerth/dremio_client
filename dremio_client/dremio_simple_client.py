@@ -57,7 +57,8 @@ from .model.endpoints import (
     votes,
     wlm_queues,
     wlm_queue,
-    wlm_rules
+    wlm_rules,
+    delete_personal_access_token_without_userid
 )
 from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
 
@@ -354,15 +355,17 @@ class SimpleClient(object):
         """
         return set_personal_access_token(self._token, self._base_url, uid, label, lifetime, ssl_verify=self._ssl_verify)
 
-    def delete_personal_access_token(self, uid):
+    def delete_personal_access_token(self, uid, tid=None):
         """ create a pat for a given user
 
         https://docs.dremio.com/rest-api/user/delete-user-uid-token.html
+        https://docs.dremio.com/rest-api/user/delete-user-uid-token-tid.html
 
         :param uid: id user
+        :param tid: token id
         :return: updated catalog entity
         """
-        return delete_personal_access_token(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+        return delete_personal_access_token(self._token, self._base_url, uid, tid, ssl_verify=self._ssl_verify)
 
     def create_reflection(self, json):
         """create a single reflection
@@ -473,3 +476,16 @@ class SimpleClient(object):
         """
 
         return refresh_reflections_of_one_dataset(self, path)
+
+    def delete_personal_access_token_without_userid(self, tid=None):
+        """
+        https://docs.dremio.com/rest-api/token/
+
+        Difference between this can delete_personal_access_token function
+        This function does not need an user-id to be passed.
+
+        :param tid: token id, to delete a specific token. None to delete all.
+        :return: None
+        """
+        return delete_personal_access_token_without_userid(self._token, self._base_url, tid, ssl_verify=self._ssl_verify)
+
