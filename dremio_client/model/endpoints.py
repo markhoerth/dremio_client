@@ -655,4 +655,3 @@ def graph(token, base_url, cid=None, ssl_verify=True):
     if cid is None:
         raise TypeError("resource id can't be None for a graph call")
     return _get(base_url + "/api/v3/catalog/{}/graph".format(cid), token, ssl_verify=ssl_verify)
-	

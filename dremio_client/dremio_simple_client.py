@@ -476,4 +476,3 @@ class SimpleClient(object):
         """
 
         return refresh_reflections_of_one_dataset(self, path)
-		
