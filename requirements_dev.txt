@@ -1,10 +1,10 @@
 bumpversion==0.6.0
 click==7.1.2
 pip==20.2.3
-coverage==5.2.1
+coverage==5.3
 flake8==3.8.3
 pre-commit==2.7.1
-pytest==6.0.1
+pytest==6.0.2
 pytest-cov==2.10.1
 pytest-runner==5.2
 requests-mock==1.8.0

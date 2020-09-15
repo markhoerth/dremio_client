@@ -29,6 +29,7 @@ from .model.endpoints import (
     catalog_item,
     collaboration_tags,
     set_collaboration_tags,
+    set_collaboration_wiki,
     collaboration_wiki,
     create_queue,
     create_reflection,
@@ -56,7 +57,7 @@ from .model.endpoints import (
     votes,
     wlm_queues,
     wlm_queue,
-    wlm_rules,
+    wlm_rules
 )
 from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
 
@@ -229,6 +230,19 @@ class SimpleClient(object):
         """
         return set_collaboration_tags(self._token, self._base_url, cid, tags, ssl_verify=self._ssl_verify)
 
+    def set_collaboration_wiki(self, cid, wiki):
+        """ returns a list of wiki for catalog entity
+
+        :param cid: catalog entity id
+        :param tags: string list
+        :raise: DremioBadRequestException if wiki can't exist on this entity
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioPermissionException user does not have permission
+        :raise: DremioNotFoundException user could not be found
+        :return: list of wikis
+        """
+        return set_collaboration_wiki(self._token, self._base_url, cid, wiki, ssl_verify=self._ssl_verify)
+
     def collaboration_wiki(self, cid):
         """ returns a wiki details for catalog entity
 
@@ -297,7 +311,7 @@ class SimpleClient(object):
         """
         return promote_catalog(self._token, self._base_url, cid, json, ssl_verify=self._ssl_verify)
 
-    def delete_catalog(self, cid, tag):
+    def delete_catalog(self, cid, tag=None):
         """ remove a catalog item from Dremio
 
         https://docs.dremio.com/rest-api/catalog/delete-catalog-id.html
