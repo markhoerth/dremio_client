@@ -354,15 +354,18 @@ class SimpleClient(object):
         """
         return set_personal_access_token(self._token, self._base_url, uid, label, lifetime, ssl_verify=self._ssl_verify)
 
-    def delete_personal_access_token(self, uid):
-        """ create a pat for a given user
+    def delete_personal_access_token(self, uid=None, tid=None):
+        """ delete a pat for a given user
 
         https://docs.dremio.com/rest-api/user/delete-user-uid-token.html
+        https://docs.dremio.com/rest-api/user/delete-user-uid-token-tid.html
+        https://docs.dremio.com/rest-api/token/
 
         :param uid: id user
-        :return: updated catalog entity
+        :param tid: token id
+        :return: Returns boolean success/failure or None.
         """
-        return delete_personal_access_token(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+        return delete_personal_access_token(self._token, self._base_url, uid, tid, ssl_verify=self._ssl_verify)
 
     def create_reflection(self, json):
         """create a single reflection
