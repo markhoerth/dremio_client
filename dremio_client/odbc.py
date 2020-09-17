@@ -28,7 +28,7 @@ import sys
 
 
 _WINDOWS_DRIVER = "Dremio Connector"
-_OSX_DRIVER = "Dremio ODBC Driver"
+_OSX_DRIVER = "/Library/Dremio/ODBC/lib/libdrillodbc_sbu.dylib" # had to add this for the driver path
 _LINUX32_DRIVER = "Dremio ODBC Driver 32-bit"
 _LINUX64_DRIVER = "Dremio ODBC Driver 64-bit"
 _DRIVER = None
@@ -41,9 +41,9 @@ def _get_driver_name():
             _DRIVER = _LINUX64_DRIVER
         else:
             _DRIVER = _LINUX32_DRIVER
-    if "darwin" in sys.platform:
+    elif "darwin" in sys.platform:   # lines 44 and 46 were not mutually exclusive so decided to change
         _DRIVER = _OSX_DRIVER
-    if "win" in sys.platform:
+    elif "win" in sys.platform:
         _DRIVER = _WINDOWS_DRIVER
     logging.debug("Using %s as the odbc driver", _DRIVER)
 

@@ -11,3 +11,5 @@ odbc:
     port: 31010
 flight:
     port: 47470
+rest:
+    port: 7183
