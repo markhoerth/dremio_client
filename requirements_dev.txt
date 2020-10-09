@@ -9,7 +9,7 @@ pytest-cov==2.10.1
 pytest-runner==5.2
 requests-mock==1.8.0
 Sphinx==3.2.1
-tox==3.20.0
+tox==3.20.1
 watchdog==0.10.3
 twine==3.2.0
 wheel==0.35.1
