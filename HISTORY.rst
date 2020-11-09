@@ -94,3 +94,15 @@ History
 -------------------
 
 * bugfixes
+
+0.13.3 (2020-09-07)
+-------------------
+
+* fix wlm bug
+* bump dependencies
+
+0.13.6 (2020-09-16)
+-------------------
+
+* add new apis
+* version bumps

@@ -29,6 +29,7 @@ from .model.endpoints import (
     catalog_item,
     collaboration_tags,
     set_collaboration_tags,
+    set_collaboration_wiki,
     collaboration_wiki,
     create_queue,
     create_reflection,
@@ -55,7 +56,8 @@ from .model.endpoints import (
     user,
     votes,
     wlm_queues,
-    wlm_rules,
+    wlm_queue,
+    wlm_rules
 )
 from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
 
@@ -115,6 +117,22 @@ class SimpleClient(object):
         :return: queues as a list of dicts
         """
         return wlm_queues(self._token, self._base_url, ssl_verify=self._ssl_verify)
+
+    def wlm_queue(self, qid=None, name=None):
+        """ return details for a queue
+
+        User must supply one of qid or name. qid takes precedence if both are supplied
+        .. note:: can only be run by admin
+        .. note:: Enterprise only
+
+        :param qid: queue id
+        :param name: queue name
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioPermissionException user does not have permission
+        :raise: DremioNotFoundException queue could not be found
+        :return: queue info as a dict
+        """
+        return wlm_queue(self._token, self._base_url, qid, name, ssl_verify=self._ssl_verify)
 
     def wlm_rules(self):
         """ return details all workload management rules
@@ -212,6 +230,19 @@ class SimpleClient(object):
         """
         return set_collaboration_tags(self._token, self._base_url, cid, tags, ssl_verify=self._ssl_verify)
 
+    def set_collaboration_wiki(self, cid, wiki):
+        """ returns a list of wiki for catalog entity
+
+        :param cid: catalog entity id
+        :param tags: string list
+        :raise: DremioBadRequestException if wiki can't exist on this entity
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioPermissionException user does not have permission
+        :raise: DremioNotFoundException user could not be found
+        :return: list of wikis
+        """
+        return set_collaboration_wiki(self._token, self._base_url, cid, wiki, ssl_verify=self._ssl_verify)
+
     def collaboration_wiki(self, cid):
         """ returns a wiki details for catalog entity
 
@@ -280,7 +311,7 @@ class SimpleClient(object):
         """
         return promote_catalog(self._token, self._base_url, cid, json, ssl_verify=self._ssl_verify)
 
-    def delete_catalog(self, cid, tag):
+    def delete_catalog(self, cid, tag=None):
         """ remove a catalog item from Dremio
 
         https://docs.dremio.com/rest-api/catalog/delete-catalog-id.html
@@ -323,15 +354,18 @@ class SimpleClient(object):
         """
         return set_personal_access_token(self._token, self._base_url, uid, label, lifetime, ssl_verify=self._ssl_verify)
 
-    def delete_personal_access_token(self, uid):
-        """ create a pat for a given user
+    def delete_personal_access_token(self, uid=None, tid=None):
+        """ delete a pat for a given user
 
         https://docs.dremio.com/rest-api/user/delete-user-uid-token.html
+        https://docs.dremio.com/rest-api/user/delete-user-uid-token-tid.html
+        https://docs.dremio.com/rest-api/token/
 
         :param uid: id user
-        :return: updated catalog entity
+        :param tid: token id
+        :return: Returns boolean success/failure or None.
         """
-        return delete_personal_access_token(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+        return delete_personal_access_token(self._token, self._base_url, uid, tid, ssl_verify=self._ssl_verify)
 
     def create_reflection(self, json):
         """create a single reflection

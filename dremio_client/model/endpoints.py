@@ -104,7 +104,6 @@ def catalog_item(token, base_url, cid=None, path=None, ssl_verify=True):
     endpoint = "/{}".format(cid) if cid else "/by-path/{}".format("/".join(cpath).replace('"', ""))
     return _get(base_url + "/api/v3/catalog{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
 
-
 def catalog(token, base_url, ssl_verify=True):
     """
     https://docs.dremio.com/rest-api/catalog/get-catalog.html populate the root dremio catalog
@@ -197,7 +196,7 @@ def reflection(token, base_url, reflectionid, ssl_verify=True):
 def wlm_queues(token, base_url, ssl_verify=True):
     """fetch all wlm queues
 
-    https://docs.dremio.com/rest-api/reflections/get-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/get-wlm-queue.html
 
     :param token: auth token
     :param base_url: sql query
@@ -207,10 +206,32 @@ def wlm_queues(token, base_url, ssl_verify=True):
     return _get(base_url + "/api/v3/wlm/queue", token, ssl_verify=ssl_verify)
 
 
+def wlm_queue(token, base_url, qid=None, name=None, ssl_verify=True):
+    """fetch wlm queue by id or name
+
+    https://docs.dremio.com/rest-api/wlm/get-wlm-queue.html
+
+    :param token: auth token
+    :param base_url: sql query
+    :param qid: unique queue id
+    :param name: name for a queue
+    :ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    if qid is None and name is None:
+        raise TypeError("both id and name cannot be None for a GET queue call")
+    if qid is not None:
+        endurl = base_url + "/api/v3/wlm/queue/{}".format(qid)
+        return _get(endurl, token, endurl, ssl_verify)
+    else:
+        endurl = base_url + "/api/v3/wlm/queue/by-name/{}".format(name)
+        return _get(endurl, token, endurl, ssl_verify)
+
+
 def wlm_rules(token, base_url, ssl_verify=True):
     """fetch all wlm rules
 
-    https://docs.dremio.com/rest-api/reflections/get-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/get-wlm-rule.html
 
     :param token: auth token
     :param base_url: sql query
@@ -247,9 +268,12 @@ def user(token, base_url, uid=None, name=None, ssl_verify=True):
     """
     if uid is None and name is None:
         raise TypeError("both id and name can't be None for a user call")
-    idpath = (uid if uid else "") + ", " + (".".join(name) if name else "")
-    endpoint = "/{}".format(uid) if uid else "/by-name/{}".format("/".join(name).replace('"', ""))
-    return _get(base_url + "/api/v3/user{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
+    if uid is not None:
+        endurl = base_url + "/api/v3/user/{}".format(uid)
+        return _get(endurl, token, endurl, ssl_verify)
+    else:
+        endurl = base_url + "/api/v3/user/by-name/{}".format(name)
+        return _get(endurl, token, endurl, ssl_verify)
 
 
 def group(token, base_url, gid=None, name=None, ssl_verify=True):
@@ -265,10 +289,13 @@ def group(token, base_url, gid=None, name=None, ssl_verify=True):
     :return: result object
     """
     if gid is None and name is None:
-        raise TypeError("both id and name can't be None for a user call")
-    idpath = (gid if gid else "") + ", " + (".".join(name) if name else "")
-    endpoint = "/{}".format(gid) if gid else "/by-name/{}".format("/".join(name).replace('"', ""))
-    return _get(base_url + "/api/v3/group{}".format(endpoint), token, idpath, ssl_verify=ssl_verify)
+        raise TypeError("both id and name can't be None for a group call")
+    if gid is not None:
+        endurl = base_url + "/api/v3/group/{}".format(gid)
+        return _get(endurl, token, endurl, ssl_verify)
+    else:
+        endurl = base_url + "/api/v3/group/by-name/{}".format(name)
+        return _get(endurl, token, endurl, ssl_verify)
 
 
 def personal_access_token(token, base_url, uid, ssl_verify=True):
@@ -383,7 +410,10 @@ def delete_catalog(token, base_url, cid, tag, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: None
     """
-    return _delete(base_url + "/api/v3/catalog/{}?tag={}".format(cid, tag), token, ssl_verify=ssl_verify)
+    if tag is None:
+        return _delete(base_url + "/api/v3/catalog/{}".format(cid), token, ssl_verify=ssl_verify)
+    else:
+        return _delete(base_url + "/api/v3/catalog/{}?tag={}".format(cid, tag), token, ssl_verify=ssl_verify)
 
 
 def set_catalog(token, base_url, json, ssl_verify=True):
@@ -446,26 +476,27 @@ def set_personal_access_token(token, base_url, uid, label, lifetime=24, ssl_veri
     return _post(
         base_url + "/api/v3/user/{}/token".format(uid),
         token,
-        {"label": label, "lifeTime": 1000 * 60 * 60 * lifetime},
+        {"label": label, "millisecondsToExpire": 1000 * 60 * 60 * lifetime},
         ssl_verify=ssl_verify,
     )
 
 
-def delete_personal_access_token(token, base_url, uid, tid=None, ssl_verify=True):
-    """ create a pat for a given user
+def delete_personal_access_token(token, base_url, uid=None, tid=None, ssl_verify=True):
+    """ delete a personal access token.
 
     https://docs.dremio.com/rest-api/user/delete-user-uid-token.html
+    https://docs.dremio.com/rest-api/token/
 
     :param token: auth token
     :param base_url: sql query
-    :param uid: id user
+    :param uid: id user (optional)
     :param tid: label of token (optional)
     :param ssl_verify: ignore ssl errors if False
     :return: updated catalog entity
     """
-    return _delete(
-        base_url + "/api/v3/user/{}/token{}".format(uid, ("/" + tid) if tid else ""), token, ssl_verify=ssl_verify
-    )
+    url_user_component = "user/{}/".format(uid) if uid else ""
+    url = base_url + "/api/v3/{}token{}".format(url_user_component, ("/" + tid) if tid else "")
+    return _delete(url, token, ssl_verify=ssl_verify)
 
 
 def modify_reflection(token, base_url, reflectionid, json, ssl_verify=True):
@@ -530,7 +561,7 @@ def cancel_job(token, base_url, jid, ssl_verify=True):
 def modify_queue(token, base_url, queueid, json, ssl_verify=True):
     """update a single queue by id
 
-    https://docs.dremio.com/rest-api/reflections/put-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/put-wlm-queue.html
 
     :param token: auth token
     :param base_url: sql query
@@ -539,13 +570,13 @@ def modify_queue(token, base_url, queueid, json, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    return _put(base_url + "/api/v3/queue/{}".format(queueid), token, json, ssl_verify=ssl_verify)
+    return _put(base_url + "/api/v3/wlm/queue/{}".format(queueid), token, json, ssl_verify=ssl_verify)
 
 
 def create_queue(token, base_url, json, ssl_verify=True):
     """create a single queue
 
-    https://docs.dremio.com/rest-api/reflections/post-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/post-wlm-queue.html
 
     :param token: auth token
     :param base_url: sql query
@@ -553,13 +584,13 @@ def create_queue(token, base_url, json, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    return _post(base_url + "/api/v3/queue/", token, json, ssl_verify=ssl_verify)
+    return _post(base_url + "/api/v3/wlm/queue/", token, json, ssl_verify=ssl_verify)
 
 
 def delete_queue(token, base_url, queueid, ssl_verify=True):
     """delete a single queue by id
 
-    https://docs.dremio.com/rest-api/reflections/delete-wlm-queue.html
+    https://docs.dremio.com/rest-api/wlm/delete-wlm-queue.html
 
     :param token: auth token
     :param base_url: sql query
@@ -567,7 +598,7 @@ def delete_queue(token, base_url, queueid, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    _delete(base_url + "/api/v3/queue/{}".format(queueid), token, ssl_verify=ssl_verify)
+    _delete(base_url + "/api/v3/wlm/queue/{}".format(queueid), token, ssl_verify=ssl_verify)
 
 
 def modify_rules(token, base_url, json, ssl_verify=True):
@@ -575,7 +606,7 @@ def modify_rules(token, base_url, json, ssl_verify=True):
 
     The order of the rules is the order in which they will be applied. If a rule isn't included it will be deleted
     new ones will be created
-    https://docs.dremio.com/rest-api/reflections/put-wlm-rule.html
+    https://docs.dremio.com/rest-api/wlm/put-wlm-rule.html
 
     :param token: auth token
     :param base_url: sql query
@@ -583,7 +614,7 @@ def modify_rules(token, base_url, json, ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    return _put(base_url + "/api/v3/rule/", token, json, ssl_verify=ssl_verify)
+    return _put(base_url + "/api/v3/wlm/rule/", token, json, ssl_verify=ssl_verify)
 
 
 def _raise_for_status(self):
