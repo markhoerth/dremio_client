@@ -28,7 +28,7 @@ import sys
 
 
 _WINDOWS_DRIVER = "Dremio Connector"
-_OSX_DRIVER = "Dremio ODBC Driver"
+_OSX_DRIVER = "Dremio Connector"
 _LINUX32_DRIVER = "Dremio ODBC Driver 32-bit"
 _LINUX64_DRIVER = "Dremio ODBC Driver 64-bit"
 _DRIVER = None
