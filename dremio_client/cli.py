@@ -80,7 +80,7 @@ def print_version(ctx, param, value):
 @click.group()
 @click.option("--config", type=click.Path(exists=True, dir_okay=True, file_okay=False), help="Custom config file.")
 @click.option("-h", "--hostname", help="Hostname if different from config file")
-@click.option("-p", "--port", type=int, help="Hostname if different from config file")
+@click.option("-pt", "--port", type=int, help="Hostname if different from config file")
 @click.option("--ssl", is_flag=True, help="Use SSL if different from config file")
 @click.option("-u", "--username", help="username if different from config file")
 @click.option("-p", "--password", help="password if different from config file")
