@@ -83,7 +83,7 @@ def print_version(ctx, param, value):
 @click.option("-p", "--port", type=int, help="Hostname if different from config file")
 @click.option("--ssl", is_flag=True, help="Use SSL if different from config file")
 @click.option("-u", "--username", help="username if different from config file")
-@click.option("-p", "--password", help="password if different from config file")
+@click.option("-P", "--password", help="password if different from config file")
 @click.option("--skip-verify", is_flag=True, help="skip verificatoin of ssl cert")
 @click.option("--version", is_flag=True, callback=print_version, expose_value=False, is_eager=True)
 @click.pass_context
