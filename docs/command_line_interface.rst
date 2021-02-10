@@ -15,10 +15,10 @@ All of the REST API calls are exposed via the command line interface. To see a l
         Options:
           --config DIRECTORY   Custom config file.
           -h, --hostname TEXT  Hostname if different from config file
-          -pt, --port INTEGER  Hostname if different from config file
+          -p, --port INTEGER  Hostname if different from config file
           --ssl                Use SSL if different from config file
           -u, --username TEXT  username if different from config file
-          -p, --password TEXT  password if different from config file
+          -P, --password TEXT  password if different from config file
           --help               Show this message and exit.
 
         Commands:
