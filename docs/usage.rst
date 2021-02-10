@@ -30,6 +30,8 @@ The default config file is as follows:
         hostname: localhost
         port: 9047
         ssl: false
+        flight:
+            port:32010
 
 The `command line interface`_ can be configured with most of the above parameters via flags or by setting a config directory.
 The relevant configs can also be set via environment variables. These take precedence. The environment variable format is
