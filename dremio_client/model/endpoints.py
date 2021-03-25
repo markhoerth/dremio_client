@@ -254,6 +254,14 @@ def votes(token, base_url, ssl_verify=True):
     return _get(base_url + "/api/v3/vote", token, ssl_verify=ssl_verify)
 
 
+def create_user(token, base_url, json, ssl_verify=True):
+    return _post(base_url + "/api/v3/user", token, json, ssl_verify=ssl_verify)
+
+
+def update_user(token, base_url, uid, json, ssl_verify=True):
+    return _put(base_url + "/api/v3/user/{}".format(uid), token, json, ssl_verify=ssl_verify)
+
+
 def user(token, base_url, uid=None, name=None, ssl_verify=True):
     """
     fetch user based on id or name
@@ -615,6 +623,26 @@ def modify_rules(token, base_url, json, ssl_verify=True):
     :return: result object
     """
     return _put(base_url + "/api/v3/wlm/rule/", token, json, ssl_verify=ssl_verify)
+
+
+def get_privilege(token, base_url, pid=None, ssl_verify=True):
+    if pid is None:
+        raise TypeError("resource id can't be None for a privilege call")
+    return _get(base_url + "/api/v3/catalog/{Id}/grants".format(pid), token, ssl_verify=ssl_verify)
+
+
+def get_privilege_by_grant_type(token, base_url, grantType="", ssl_verify=True):
+    if grantType == "":
+        raise TypeError("resource grantType can't be empty for a privilege call")
+    return _get(base_url + "/api/v3/catalog/privileges?type={}".format(grantType), token, ssl_verify=ssl_verify)
+
+
+def update_privilege(token, base_url, pid, json, ssl_verify=True):
+    return _put(base_url + "/api/v3/catalog/{}/grants".format(pid), token, json, ssl_verify=ssl_verify)
+
+
+def delete_privilege(token, base_url, pid, grants, ssl_verify=True):
+    return _delete(base_url + "/api/v3/catalog/{}/{}".format(pid, grants), token, ssl_verify=ssl_verify)
 
 
 def _raise_for_status(self):
