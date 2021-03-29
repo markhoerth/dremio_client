@@ -37,6 +37,10 @@ from .model.endpoints import (
     delete_personal_access_token,
     delete_queue,
     delete_reflection,
+    get_privilege,
+    get_privilege_by_grant_type,
+    update_privilege,
+    delete_privilege,
     graph,
     group,
     job_results,
@@ -53,6 +57,8 @@ from .model.endpoints import (
     sql,
     update_catalog,
     promote_catalog,
+    create_user,
+    update_user,
     user,
     votes,
     wlm_queues,
@@ -161,6 +167,12 @@ class SimpleClient(object):
         :return: votes as a list of dicts
         """
         return votes(self._token, self._base_url, ssl_verify=self._ssl_verify)
+
+    def create_user(self, json):
+        return create_user(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
+
+    def update_user(self, uid, json):
+        return update_user(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
 
     def user(self, uid=None, name=None):
         """ return details for a user
@@ -476,3 +488,15 @@ class SimpleClient(object):
         """
 
         return refresh_reflections_of_one_dataset(self, path)
+
+    def get_privilege(self, pid):
+        return get_privilege(self._token, self._base_url, pid, ssl_verify=self._ssl_verify)
+
+    def get_privilege_by_grant_type(self, grantType):
+        return get_privilege_by_grant_type(self._token, self._base_url, grantType, ssl_verify=self._ssl_verify)
+
+    def update_privilege(self, pid, json):
+        return update_privilege(self._token, self._base_url, pid, json, ssl_verify=self._ssl_verify)
+
+    def delete_privilege(self, pid, grants):
+        return delete_privilege(self._token, self._base_url, pid, grants, ssl_verify=self._ssl_verify)
