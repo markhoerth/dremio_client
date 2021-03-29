@@ -628,7 +628,7 @@ def modify_rules(token, base_url, json, ssl_verify=True):
 def get_privilege(token, base_url, pid=None, ssl_verify=True):
     if pid is None:
         raise TypeError("resource id can't be None for a privilege call")
-    return _get(base_url + "/api/v3/catalog/{Id}/grants".format(pid), token, ssl_verify=ssl_verify)
+    return _get(base_url + "/api/v3/catalog/{}/grants".format(pid), token, ssl_verify=ssl_verify)
 
 
 def get_privilege_by_grant_type(token, base_url, grantType="", ssl_verify=True):
