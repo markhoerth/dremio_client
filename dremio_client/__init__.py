@@ -30,10 +30,9 @@ from .dremio_client import DremioClient
 from .dremio_simple_client import SimpleClient
 from .model.endpoints import catalog, catalog_item, job_results, job_status, sql
 
-
 __author__ = """Ryan Murray"""
 __email__ = "rymurr@gmail.com"
-__version__ = "__version__ = '0.13.6'"
+__version__ = "0.13.6"
 
 
 def get_config(config_dir=None, args=None):
@@ -43,7 +42,7 @@ def get_config(config_dir=None, args=None):
 
 
 def init(config_dir=None, simple_client=False, config_dict=None):
-    """ create a new Dremio client object
+    """create a new Dremio client object
 
     This returns a rich client by default. This client abstracts the Dremio catalog into a
     a set of Python objects and enables *<Tab>* completion where possible. It also supports

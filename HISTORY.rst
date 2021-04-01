@@ -106,3 +106,12 @@ History
 
 * add new apis
 * version bumps
+
+0.14.0 (2021-04-01)
+-------------------
+
+* add new apis
+* version bumps
+* docs updates
+* fix to query to produce correct pandas data frame
+* fix to cli, dup args
