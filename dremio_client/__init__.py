@@ -32,7 +32,7 @@ from .model.endpoints import catalog, catalog_item, job_results, job_status, sql
 
 __author__ = """Ryan Murray"""
 __email__ = "rymurr@gmail.com"
-__version__ = "0.13.6"
+__version__ = "0.14.0"
 
 
 def get_config(config_dir=None, args=None):
