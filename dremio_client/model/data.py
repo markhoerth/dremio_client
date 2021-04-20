@@ -535,9 +535,13 @@ def _get_item(catalog, cid=None, path=None):
 
 
 def _put(self):
+    json = {k: v for k, v in attr.asdict(self.meta).items() if v}
+    for i in ("state", "createdAt"):
+        if i in json:
+            del json[i]
     cid = self.meta.id
-    result = update_catalog(self._token, self._base_url, cid, attr.asdict(self.meta), self._ssl_verify)
-
+    
+    result = update_catalog(self._token, self._base_url, cid, json, self._ssl_verify)
     _, obj = create(result, self._token, self._base_url, self._flight_endpoint, ssl_verify=self._ssl_verify)
     return obj.meta
 
