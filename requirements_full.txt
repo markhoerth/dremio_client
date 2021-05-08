@@ -1,4 +1,4 @@
-attrs==20.3.0
+attrs==21.2.0
 Click>=6.0
 pandas==1.2.3
 confuse==1.4.0
