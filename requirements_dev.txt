@@ -2,7 +2,7 @@ bumpversion==0.6.0
 click==7.1.2
 pre-commit==2.11.1
 coverage==5.5
-pip==21.0.1
+pip==21.1.2
 flake8==3.9.0
 pytest==6.2.2
 pytest-cov==2.11.1
