@@ -1,6 +1,6 @@
-attrs==20.3.0
+attrs==21.2.0
 Click>=6.0
 confuse==1.4.0
 requests>=2.21.0
 simplejson==3.17.2
-six==1.15.0
+six==1.16.0
