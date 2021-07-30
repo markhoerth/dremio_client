@@ -64,6 +64,12 @@ def _put(url, token, json=None, details="", ssl_verify=True):
     r = requests.put(url, headers=_get_headers(token), verify=ssl_verify, json=json)
     return _check_error(r, details)
 
+def _patch(url, token, json=None, details="", ssl_verify=True):
+    if isinstance(json, str):
+        json = jsonlib.loads(json)
+    r = requests.patch(url, headers=_get_headers(token) ,verify=ssl_verify, json=json)
+    return _check_error(r, details)
+
 
 def _check_error(r, details=""):
     error, code, _ = _raise_for_status(r)
@@ -258,8 +264,44 @@ def create_user(token, base_url, json, ssl_verify=True):
     return _post(base_url + "/api/v3/user", token, json, ssl_verify=ssl_verify)
 
 
+def get_user(token, base_url, uid, ssl_verify=True):
+    return _get(base_url + "/api/v3/user/{}".format(uid), token, ssl_verify=ssl_verify)
+
+
+def delete_user(token, base_url, uid , ssl_verify=True):
+    return _delete(base_url + "/api/v3/user/{}".format(uid) , token, ssl_verify=ssl_verify)
+
+
 def update_user(token, base_url, uid, json, ssl_verify=True):
     return _put(base_url + "/api/v3/user/{}".format(uid), token, json, ssl_verify=ssl_verify)
+
+def get_all_users(token, base_url ,startIndex=None , count=None ,query=None  , ssl_verify=True):
+    if startIndex is not None and count is not None and query is not None:
+        return _get(base_url + "/api/v3/user?startIndex={}&count={}&filter={}".format(startIndex, count, query), token, ssl_verify=ssl_verify)
+    elif startIndex is not None and count is not None:
+        return _get(base_url + "/api/v3/user?startIndex={}&count={}".format(startIndex, count), token, ssl_verify=ssl_verify)
+    elif startIndex is not None and query is not None:
+        return _get(base_url + "/api/v3/user?startIndex={}&filter={}".format(startIndex, query), token, ssl_verify=ssl_verify)
+    elif count is not None and query is not None:
+        return _get(base_url + "/api/v3/user?count={}&filter={}".format(count, query), token, ssl_verify=ssl_verify)
+    elif startIndex is None and count is None and query is None:
+        return _get(base_url + "/api/v3/user", token, ssl_verify=ssl_verify)
+    elif startIndex is None and count is None:
+        return _get(base_url + "/api/v3/user?filter={}".format(query), token, ssl_verify=ssl_verify)
+    elif startIndex is None and query is None:
+        return _get(base_url + "/api/v3/user?count={}".format(count), token, ssl_verify=ssl_verify)
+    elif count is None and query is None:
+        return _get(base_url + "/api/v3/user?startIndex={}".format(startIndex), token, ssl_verify=ssl_verify)
+
+def get_privileges_of_user(token,base_url ,uid ,startIndex=None, count=None ,ssl_verify=True):
+    if startIndex is None and count is None :
+        return _get(base_url + "/api/v3/user/{}/privileges".format(uid), token, ssl_verify=ssl_verify)
+    elif startIndex is not None and count is not None:
+        return _get(base_url + "/api/v3/user/{}/privileges?startIndex={}&count={}".format(uid ,startIndex, count), token, ssl_verify=ssl_verify)
+    elif startIndex is None :
+        return _get(base_url + "/api/v3/user/{}/privileges?count={}".format(uid , count), token,ssl_verify=ssl_verify)
+    elif  count is None:
+        return _get(base_url + "/api/v3/user/{}/privileges?startIndex={}".format(uid ,startIndex), token, ssl_verify=ssl_verify)
 
 
 def user(token, base_url, uid=None, name=None, ssl_verify=True):
@@ -282,6 +324,65 @@ def user(token, base_url, uid=None, name=None, ssl_verify=True):
     else:
         endurl = base_url + "/api/v3/user/by-name/{}".format(name)
         return _get(endurl, token, endurl, ssl_verify)
+
+
+def create_role(token,base_url,json ,ssl_verify=True):
+    return _post(base_url + "/api/v3/role", token, json, ssl_verify=ssl_verify)
+
+
+def get_role(token, base_url, uid, ssl_verify=True):
+    return _get(base_url + "/api/v3/role/{}".format(uid), token, ssl_verify=ssl_verify)
+
+
+def delete_role(token, base_url, uid , ssl_verify=True):
+    return _delete(base_url + "/api/v3/role/{}".format(uid) , token, ssl_verify=ssl_verify)
+
+
+def update_role(token, base_url, uid, json, ssl_verify=True):
+    return _put(base_url + "/api/v3/role/{}".format(uid), token, json, ssl_verify=ssl_verify)
+
+def get_all_roles(token, base_url ,startIndex=None , count=None ,query=None  , ssl_verify=True):
+    if startIndex is not None and count is not None and query is not None:
+        return _get(base_url + "/api/v3/role?startIndex={}&count={}&filter={}".format(startIndex, count, query), token, ssl_verify=ssl_verify)
+    elif startIndex is not None and count is not None:
+        return _get(base_url + "/api/v3/role?startIndex={}&count={}".format(startIndex, count), token, ssl_verify=ssl_verify)
+    elif startIndex is not None and query is not None:
+        return _get(base_url + "/api/v3/role?startIndex={}&filter={}".format(startIndex, query), token, ssl_verify=ssl_verify)
+    elif count is not None and query is not None:
+        return _get(base_url + "/api/v3/role?count={}&filter={}".format(count, query), token, ssl_verify=ssl_verify)
+    elif startIndex is None and count is None and query is None:
+        return _get(base_url + "/api/v3/role", token, ssl_verify=ssl_verify)
+    elif startIndex is None and count is None:
+        return _get(base_url + "/api/v3/role?filter={}".format(query), token, ssl_verify=ssl_verify)
+    elif startIndex is None and query is None:
+        return _get(base_url + "/api/v3/role?count={}".format(count), token, ssl_verify=ssl_verify)
+    elif count is None and query is None:
+        return _get(base_url + "/api/v3/role?startIndex={}".format(startIndex), token, ssl_verify=ssl_verify)
+
+
+def get_members_of_role(token,base_url ,uid ,startIndex=None, count=None ,ssl_verify=True):
+    if startIndex is None and count is None :
+        return _get(base_url + "/api/v3/role/{}/member".format(uid), token, ssl_verify=ssl_verify)
+    elif startIndex is not None and count is not None:
+        return _get(base_url + "/api/v3/role/{}/member?startIndex={}&count={}".format(uid ,startIndex, count), token, ssl_verify=ssl_verify)
+    elif startIndex is None :
+        return _get(base_url + "/api/v3/role/{}/member?count={}".format(uid , count), token,ssl_verify=ssl_verify)
+    elif  count is None:
+        return _get(base_url + "/api/v3/role/{}/member?startIndex={}".format(uid ,startIndex), token, ssl_verify=ssl_verify)
+
+def get_privileges_of_role(token,base_url ,uid ,startIndex=None, count=None ,ssl_verify=True):
+    if startIndex is None and count is None :
+        return _get(base_url + "/api/v3/role/{}/privileges".format(uid), token, ssl_verify=ssl_verify)
+    elif startIndex is not None and count is not None:
+        return _get(base_url + "/api/v3/role/{}/privileges?startIndex={}&count={}".format(uid ,startIndex, count), token, ssl_verify=ssl_verify)
+    elif startIndex is None :
+        return _get(base_url + "/api/v3/role/{}/privileges?count={}".format(uid , count), token,ssl_verify=ssl_verify)
+    elif  count is None:
+        return _get(base_url + "/api/v3/role/{}/privileges?startIndex={}".format(uid ,startIndex), token, ssl_verify=ssl_verify)
+
+
+def add_remove_member_of_role(token, base_url, uid, json, ssl_verify=True):
+    return _patch(base_url + "/api/v3/role/{}/member".format(uid), token, json, ssl_verify=ssl_verify)
 
 
 def group(token, base_url, gid=None, name=None, ssl_verify=True):

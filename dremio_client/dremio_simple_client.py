@@ -63,7 +63,9 @@ from .model.endpoints import (
     votes,
     wlm_queues,
     wlm_queue,
-    wlm_rules
+    wlm_rules,
+    get_all_users, get_user, delete_user, update_role, delete_role, get_role, create_role, get_all_roles,
+    get_members_of_role, get_privileges_of_role, get_privileges_of_user, add_remove_member_of_role
 )
 from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
 
@@ -171,8 +173,32 @@ class SimpleClient(object):
     def create_user(self, json):
         return create_user(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
 
+    def get_user(self, uid):
+        return get_user(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+
+    def delete_user(self, uid):
+        return delete_user(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+
     def update_user(self, uid, json):
         return update_user(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
+
+    def get_all_users(self, startIndex=None , count=None ,query=None ):
+        """ return all the users
+
+                startIndex , count , and query are optional parameters
+
+                :param startIndex: returns users starting from this index
+                :param count: maximum number of users return
+                :param query: filter based on this query
+                :raise: DremioUnauthorizedException if token is incorrect or invalid
+                :raise: DremioPermissionException user does not have permission
+                :raise: DremioNotFoundException user could not be found
+                :return: users info as a dict
+                """
+        return get_all_users(self._token,self._base_url  ,startIndex , count ,query , ssl_verify=self._ssl_verify)
+
+    def get_privileges_of_user(self, uid, startIndex=None, count=None):
+        return get_privileges_of_user(self._token, self._base_url, uid, startIndex, count, ssl_verify=self._ssl_verify)
 
     def user(self, uid=None, name=None):
         """ return details for a user
@@ -188,6 +214,41 @@ class SimpleClient(object):
         :return: user info as a dict
         """
         return user(self._token, self._base_url, uid, name, ssl_verify=self._ssl_verify)
+
+    def create_role(self, json):
+        return create_role(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
+
+    def get_role(self, uid):
+        return get_role(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+
+    def delete_role(self, uid):
+        return delete_role(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+
+    def update_role(self, uid, json):
+        return update_role(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
+
+    def get_all_roles(self, startIndex=None, count=None, query=None):
+        """ return all the roles
+
+                startIndex , count , and query are optional parameters
+
+                :param startIndex: returns roles starting from this index
+                :param count: maximum number of roles return
+                :param query: filter based on this query
+                :raise: DremioUnauthorizedException if token is incorrect or invalid
+                :raise: DremioNotFoundException role could not be found
+                :return: roles info as a dict
+                """
+        return get_all_roles(self._token, self._base_url, startIndex, count, query, ssl_verify=self._ssl_verify)
+
+    def get_members_of_role(self, uid, startIndex=None, count=None):
+        return get_members_of_role(self._token ,self._base_url,uid,startIndex,count,ssl_verify=self._ssl_verify)
+
+    def get_privileges_of_role(self, uid, startIndex=None, count=None):
+        return get_privileges_of_role(self._token, self._base_url, uid, startIndex, count, ssl_verify=self._ssl_verify)
+
+    def add_remove_member_of_role(self, uid, json):
+        return add_remove_member_of_role(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
 
     def group(self, gid=None, name=None):
         """ return details for a group
