@@ -64,8 +64,9 @@ from .model.endpoints import (
     wlm_queues,
     wlm_queue,
     wlm_rules,
-    get_all_users, get_user, delete_user, update_role, delete_role, get_role, create_role, get_all_roles,
-    get_members_of_role, get_privileges_of_role, get_privileges_of_user, add_remove_member_of_role
+    get_all_users, delete_user, update_role, delete_role, get_role, create_role, get_all_roles,
+    get_members_of_role, get_privileges_of_role, get_privileges_of_user,
+    update_member_of_role
 )
 from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
 
@@ -173,8 +174,8 @@ class SimpleClient(object):
     def create_user(self, json):
         return create_user(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
 
-    def get_user(self, uid):
-        return get_user(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+    #def get_user(self, uid):
+     #   return get_user(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
 
     def delete_user(self, uid):
         return delete_user(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
@@ -247,8 +248,8 @@ class SimpleClient(object):
     def get_privileges_of_role(self, uid, startIndex=None, count=None):
         return get_privileges_of_role(self._token, self._base_url, uid, startIndex, count, ssl_verify=self._ssl_verify)
 
-    def add_remove_member_of_role(self, uid, json):
-        return add_remove_member_of_role(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
+    def update_member_of_role(self, uid, json):
+        return update_member_of_role(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
 
     def group(self, gid=None, name=None):
         """ return details for a group

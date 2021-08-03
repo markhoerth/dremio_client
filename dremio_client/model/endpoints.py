@@ -264,8 +264,8 @@ def create_user(token, base_url, json, ssl_verify=True):
     return _post(base_url + "/api/v3/user", token, json, ssl_verify=ssl_verify)
 
 
-def get_user(token, base_url, uid, ssl_verify=True):
-    return _get(base_url + "/api/v3/user/{}".format(uid), token, ssl_verify=ssl_verify)
+#def get_user(token, base_url, uid, ssl_verify=True):
+#    return _get(base_url + "/api/v3/user/{}".format(uid), token, ssl_verify=ssl_verify)
 
 
 def delete_user(token, base_url, uid , ssl_verify=True):
@@ -381,7 +381,7 @@ def get_privileges_of_role(token,base_url ,uid ,startIndex=None, count=None ,ssl
         return _get(base_url + "/api/v3/role/{}/privileges?startIndex={}".format(uid ,startIndex), token, ssl_verify=ssl_verify)
 
 
-def add_remove_member_of_role(token, base_url, uid, json, ssl_verify=True):
+def update_member_of_role(token, base_url, uid, json, ssl_verify=True):
     return _patch(base_url + "/api/v3/role/{}/member".format(uid), token, json, ssl_verify=ssl_verify)
 
 
