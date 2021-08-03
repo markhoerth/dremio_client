@@ -219,8 +219,8 @@ class SimpleClient(object):
     def create_role(self, json):
         return create_role(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
 
-    def get_role(self, uid):
-        return get_role(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+    def get_role(self, uid=None ,name=None):
+        return get_role(self._token, self._base_url, uid, name,ssl_verify=self._ssl_verify)
 
     def delete_role(self, uid):
         return delete_role(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)

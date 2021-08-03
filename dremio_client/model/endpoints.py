@@ -330,8 +330,13 @@ def create_role(token,base_url,json ,ssl_verify=True):
     return _post(base_url + "/api/v3/role", token, json, ssl_verify=ssl_verify)
 
 
-def get_role(token, base_url, uid, ssl_verify=True):
-    return _get(base_url + "/api/v3/role/{}".format(uid), token, ssl_verify=ssl_verify)
+def get_role(token, base_url, uid, name, ssl_verify=True):
+    if uid is None and name is None:
+        raise TypeError("both id and name can't be None for a user call")
+    if uid is not None :
+        return _get(base_url + "/api/v3/role/{}".format(uid), token, ssl_verify=ssl_verify)
+    else:
+        return _get(base_url + "/api/v3/role/by-name/{}".format(name), token, ssl_verify=ssl_verify)
 
 
 def delete_role(token, base_url, uid , ssl_verify=True):
