@@ -268,8 +268,8 @@ def create_user(token, base_url, json, ssl_verify=True):
 #    return _get(base_url + "/api/v3/user/{}".format(uid), token, ssl_verify=ssl_verify)
 
 
-def delete_user(token, base_url, uid , ssl_verify=True):
-    return _delete(base_url + "/api/v3/user/{}".format(uid) , token, ssl_verify=ssl_verify)
+def delete_user(token, base_url, uid ,tag , ssl_verify=True):
+    return _delete(base_url + "/api/v3/user/{}?version={}".format(uid,tag) , token, ssl_verify=ssl_verify)
 
 
 def update_user(token, base_url, uid, json, ssl_verify=True):

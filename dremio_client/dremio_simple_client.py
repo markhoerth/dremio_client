@@ -177,8 +177,8 @@ class SimpleClient(object):
     #def get_user(self, uid):
      #   return get_user(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
 
-    def delete_user(self, uid):
-        return delete_user(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+    def delete_user(self, uid , tag):
+        return delete_user(self._token, self._base_url, uid, tag ,ssl_verify=self._ssl_verify)
 
     def update_user(self, uid, json):
         return update_user(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
@@ -222,8 +222,8 @@ class SimpleClient(object):
     def get_role(self, uid=None ,name=None):
         return get_role(self._token, self._base_url, uid, name,ssl_verify=self._ssl_verify)
 
-    def delete_role(self, uid):
-        return delete_role(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
+    def delete_role(self, uid ):
+        return delete_role(self._token, self._base_url, uid,ssl_verify=self._ssl_verify)
 
     def update_role(self, uid, json):
         return update_role(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
