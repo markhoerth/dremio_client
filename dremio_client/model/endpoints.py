@@ -261,47 +261,87 @@ def votes(token, base_url, ssl_verify=True):
 
 
 def create_user(token, base_url, json, ssl_verify=True):
+    """
+    :param token: auth token
+    :param base_url: sql query
+    :param json: json document for creating new user
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
     return _post(base_url + "/api/v3/user", token, json, ssl_verify=ssl_verify)
 
 
-#def get_user(token, base_url, uid, ssl_verify=True):
-#    return _get(base_url + "/api/v3/user/{}".format(uid), token, ssl_verify=ssl_verify)
-
-
 def delete_user(token, base_url, uid ,tag , ssl_verify=True):
-    return _delete(base_url + "/api/v3/user/{}?version={}".format(uid,tag) , token, ssl_verify=ssl_verify)
+    """
+    Deletes the given user if it exists
+    :param token: auth token
+    :param base_url: sql query
+    :param uid: user id
+    :param tag: version parameter of user
+    :param ssl_verify: ignore ssl errors if False
+    :return: None
+    """
+    return _delete(base_url + "/api/v3/user/{}/version={}".format(uid,tag) , token, ssl_verify=ssl_verify)
 
 
 def update_user(token, base_url, uid, json, ssl_verify=True):
+    """
+    Returns the user info after updating it
+    :param token: auth token
+    :param base_url: sql query
+    :param uid: user id
+    :param json: json document for role
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
     return _put(base_url + "/api/v3/user/{}".format(uid), token, json, ssl_verify=ssl_verify)
 
 def get_all_users(token, base_url ,startIndex=None , count=None ,query=None  , ssl_verify=True):
-    if startIndex is not None and count is not None and query is not None:
-        return _get(base_url + "/api/v3/user?startIndex={}&count={}&filter={}".format(startIndex, count, query), token, ssl_verify=ssl_verify)
-    elif startIndex is not None and count is not None:
-        return _get(base_url + "/api/v3/user?startIndex={}&count={}".format(startIndex, count), token, ssl_verify=ssl_verify)
-    elif startIndex is not None and query is not None:
-        return _get(base_url + "/api/v3/user?startIndex={}&filter={}".format(startIndex, query), token, ssl_verify=ssl_verify)
-    elif count is not None and query is not None:
-        return _get(base_url + "/api/v3/user?count={}&filter={}".format(count, query), token, ssl_verify=ssl_verify)
-    elif startIndex is None and count is None and query is None:
-        return _get(base_url + "/api/v3/user", token, ssl_verify=ssl_verify)
-    elif startIndex is None and count is None:
-        return _get(base_url + "/api/v3/user?filter={}".format(query), token, ssl_verify=ssl_verify)
-    elif startIndex is None and query is None:
-        return _get(base_url + "/api/v3/user?count={}".format(count), token, ssl_verify=ssl_verify)
-    elif count is None and query is None:
-        return _get(base_url + "/api/v3/user?startIndex={}".format(startIndex), token, ssl_verify=ssl_verify)
+    """
+    fetch all users
+    :param token: auth token
+    :param base_url: sql query
+    :param startIndex: index starting from which to fetch users
+    :param count: Maximum number of users to fetch
+    :param query: filters users based on this query
+    :param ssl_verify: ignore ssl errors if false
+    :return: result object
+    """
+    params = dict()
+    if startIndex is not None:
+        params['startIndex'] = startIndex
+    if count is not None:
+        params['count'] = count
+    if query is not None:
+        params['query'] = query
+    end_url = base_url + "/api/v3/user"
+    qry = '&'.join("{}={}".format(k, v) for k, v in params.items())
+    if len(qry)>0:
+        end_url=end_url + '?' +qry
+    return _get(end_url, token, ssl_verify=ssl_verify)
+
 
 def get_privileges_of_user(token,base_url ,uid ,startIndex=None, count=None ,ssl_verify=True):
-    if startIndex is None and count is None :
-        return _get(base_url + "/api/v3/user/{}/privileges".format(uid), token, ssl_verify=ssl_verify)
-    elif startIndex is not None and count is not None:
-        return _get(base_url + "/api/v3/user/{}/privileges?startIndex={}&count={}".format(uid ,startIndex, count), token, ssl_verify=ssl_verify)
-    elif startIndex is None :
-        return _get(base_url + "/api/v3/user/{}/privileges?count={}".format(uid , count), token,ssl_verify=ssl_verify)
-    elif  count is None:
-        return _get(base_url + "/api/v3/user/{}/privileges?startIndex={}".format(uid ,startIndex), token, ssl_verify=ssl_verify)
+    """
+    Fetches all the privileges of a user
+    :param token: auth token
+    :param base_url: sql query
+    :param uid: user id
+    :param startIndex: index starting from which to fetch privileges
+    :param count: maximum number of privileges to fetch
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    params = dict()
+    if startIndex is not None:
+        params['startIndex'] = startIndex
+    if count is not None:
+        params['count'] = count
+    qry = '&'.join("{}={}".format(k, v) for k, v in params.items())
+    end_url=base_url + "/api/v3/user/{}/privilege".format(uid)
+    if len(qry)>0  :
+        end_url=end_url + '?' + qry
+    return _get(end_url, token, ssl_verify=ssl_verify)
 
 
 def user(token, base_url, uid=None, name=None, ssl_verify=True):
@@ -327,67 +367,139 @@ def user(token, base_url, uid=None, name=None, ssl_verify=True):
 
 
 def create_role(token,base_url,json ,ssl_verify=True):
+    """
+    :param token: auth token
+    :param base_url: sql query
+    :param json: json document for creating new role
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
     return _post(base_url + "/api/v3/role", token, json, ssl_verify=ssl_verify)
 
 
-def get_role(token, base_url, uid, name, ssl_verify=True):
-    if uid is None and name is None:
+def get_role(token, base_url, rid, name, ssl_verify=True):
+    """
+    Returns role info for a role with given id or name
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param name: role name
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    if rid is None and name is None:
         raise TypeError("both id and name can't be None for a user call")
-    if uid is not None :
-        return _get(base_url + "/api/v3/role/{}".format(uid), token, ssl_verify=ssl_verify)
+    if rid is not None :
+        return _get(base_url + "/api/v3/role/{}".format(rid), token, ssl_verify=ssl_verify)
     else:
         return _get(base_url + "/api/v3/role/by-name/{}".format(name), token, ssl_verify=ssl_verify)
 
 
-def delete_role(token, base_url, uid , ssl_verify=True):
-    return _delete(base_url + "/api/v3/role/{}".format(uid) , token, ssl_verify=ssl_verify)
+def delete_role(token, base_url, rid , ssl_verify=True):
+    """
+    Deletes the role with a given rid
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param ssl_verify: ignore ssl errors if False
+    :return: None
+    """
+    return _delete(base_url + "/api/v3/role/{}".format(rid) , token, ssl_verify=ssl_verify)
 
 
-def update_role(token, base_url, uid, json, ssl_verify=True):
-    return _put(base_url + "/api/v3/role/{}".format(uid), token, json, ssl_verify=ssl_verify)
+def update_role(token, base_url, rid, json, ssl_verify=True):
+    """
+    Returns the role after updating it
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param json: json document for role
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    return _put(base_url + "/api/v3/role/{}".format(rid), token, json, ssl_verify=ssl_verify)
 
 def get_all_roles(token, base_url ,startIndex=None , count=None ,query=None  , ssl_verify=True):
-    if startIndex is not None and count is not None and query is not None:
-        return _get(base_url + "/api/v3/role?startIndex={}&count={}&filter={}".format(startIndex, count, query), token, ssl_verify=ssl_verify)
-    elif startIndex is not None and count is not None:
-        return _get(base_url + "/api/v3/role?startIndex={}&count={}".format(startIndex, count), token, ssl_verify=ssl_verify)
-    elif startIndex is not None and query is not None:
-        return _get(base_url + "/api/v3/role?startIndex={}&filter={}".format(startIndex, query), token, ssl_verify=ssl_verify)
-    elif count is not None and query is not None:
-        return _get(base_url + "/api/v3/role?count={}&filter={}".format(count, query), token, ssl_verify=ssl_verify)
-    elif startIndex is None and count is None and query is None:
-        return _get(base_url + "/api/v3/role", token, ssl_verify=ssl_verify)
-    elif startIndex is None and count is None:
-        return _get(base_url + "/api/v3/role?filter={}".format(query), token, ssl_verify=ssl_verify)
-    elif startIndex is None and query is None:
-        return _get(base_url + "/api/v3/role?count={}".format(count), token, ssl_verify=ssl_verify)
-    elif count is None and query is None:
-        return _get(base_url + "/api/v3/role?startIndex={}".format(startIndex), token, ssl_verify=ssl_verify)
+    """
+    Fetches all the roles
+    :param token: auth token
+    :param base_url: sql query
+    :param startIndex:(optional) Index from which to start getting roles
+    :param count:(optional) maximum number of roles to fetch
+    :param query: (optional) filter roles based on this query
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    params=dict()
+    if startIndex is not None:
+        params['startIndex']=startIndex
+    if count is not None:
+        params['count']=count
+    if query is not None:
+        params['query']=query
+    end_url=base_url + "/api/v3/role"
+    qry='&'.join("{}={}".format(k,v) for k,v in params.items())
+    if len(qry)>0:
+        end_url=end_url +'?' + qry
+    return _get(end_url, token,  ssl_verify=ssl_verify)
 
 
-def get_members_of_role(token,base_url ,uid ,startIndex=None, count=None ,ssl_verify=True):
-    if startIndex is None and count is None :
-        return _get(base_url + "/api/v3/role/{}/member".format(uid), token, ssl_verify=ssl_verify)
-    elif startIndex is not None and count is not None:
-        return _get(base_url + "/api/v3/role/{}/member?startIndex={}&count={}".format(uid ,startIndex, count), token, ssl_verify=ssl_verify)
-    elif startIndex is None :
-        return _get(base_url + "/api/v3/role/{}/member?count={}".format(uid , count), token,ssl_verify=ssl_verify)
-    elif  count is None:
-        return _get(base_url + "/api/v3/role/{}/member?startIndex={}".format(uid ,startIndex), token, ssl_verify=ssl_verify)
+def get_members_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
+    """
+    Return members of a given role
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param startIndex: Index starting from which to return members
+    :param count: Maximum number of members to return
+    :param ssl_verify: Ignore ssl errors if False
+    :return: result object
+    """
+    params=dict()
+    if startIndex is not None:
+        params['startIndex']=startIndex
+    if count is not None:
+        params['count']=count
+    end_url=base_url + "/api/v3/role/{}/member".format(rid)
+    qry='&'.join("{}={}".format(k,v) for k,v in params.items())
+    if len(qry)>0 :
+        end_url = end_url +'?' + qry
+    return _get(end_url , token, ssl_verify=ssl_verify)
 
-def get_privileges_of_role(token,base_url ,uid ,startIndex=None, count=None ,ssl_verify=True):
-    if startIndex is None and count is None :
-        return _get(base_url + "/api/v3/role/{}/privileges".format(uid), token, ssl_verify=ssl_verify)
-    elif startIndex is not None and count is not None:
-        return _get(base_url + "/api/v3/role/{}/privileges?startIndex={}&count={}".format(uid ,startIndex, count), token, ssl_verify=ssl_verify)
-    elif startIndex is None :
-        return _get(base_url + "/api/v3/role/{}/privileges?count={}".format(uid , count), token,ssl_verify=ssl_verify)
-    elif  count is None:
-        return _get(base_url + "/api/v3/role/{}/privileges?startIndex={}".format(uid ,startIndex), token, ssl_verify=ssl_verify)
+def get_privileges_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
+    """
+    Fetches privileges of a given role
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param startIndex: index starting from which to fetch privileges
+    :param count: maximum number of privileges to fetch
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    params = dict()
+    if startIndex is not None:
+        params['startIndex'] = startIndex
+    if count is not None:
+        params['count'] = count
+    qry = '&'.join("{}={}".format(k, v) for k, v in params.items())
+    end_url = base_url + "/api/v3/role/{}/privilege".format(rid)
+    if len(qry) > 0:
+        end_url = end_url + '?' + qry
+    return _get(end_url, token, ssl_verify=ssl_verify)
 
 
-def update_member_of_role(token, base_url, uid, json, ssl_verify=True):
-    return _patch(base_url + "/api/v3/role/{}/member".format(uid), token, json, ssl_verify=ssl_verify)
+def update_member_of_role(token, base_url, rid, json, ssl_verify=True):
+    """
+    Add remove a member from a role
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param json: json document of role
+    :param ssl_verify: Ignore ssl errors if False
+    :return: result object
+    """
+    return _patch(base_url + "/api/v3/role/{}/member".format(rid), token, json, ssl_verify=ssl_verify)
 
 
 def group(token, base_url, gid=None, name=None, ssl_verify=True):

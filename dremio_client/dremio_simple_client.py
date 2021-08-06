@@ -172,15 +172,32 @@ class SimpleClient(object):
         return votes(self._token, self._base_url, ssl_verify=self._ssl_verify)
 
     def create_user(self, json):
+        """ returns the new user after creating it
+            :param json: json document for new user (name is required)
+            :return: result object
+        """
         return create_user(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
 
-    #def get_user(self, uid):
-     #   return get_user(self._token, self._base_url, uid, ssl_verify=self._ssl_verify)
-
     def delete_user(self, uid , tag):
+        """
+        Delete user corresponding to the the given uid and version tag.
+        :param uid: user id
+        :param tag: version parameter for a given user
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioNotFoundException if user could not be found
+        :return: None
+        """
         return delete_user(self._token, self._base_url, uid, tag ,ssl_verify=self._ssl_verify)
 
     def update_user(self, uid, json):
+        """
+        Returns user corresponding to the the given uid or name (Atleast one of name or uid should be given)
+        :param uid: user id
+        :param json: json document for updating the user info
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioNotFoundException if user could not be found
+        :return: result object
+        """
         return update_user(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
 
     def get_all_users(self, startIndex=None , count=None ,query=None ):
@@ -189,16 +206,20 @@ class SimpleClient(object):
                 startIndex , count , and query are optional parameters
 
                 :param startIndex: returns users starting from this index
-                :param count: maximum number of users return
+                :param count: maximum number of users to return
                 :param query: filter based on this query
-                :raise: DremioUnauthorizedException if token is incorrect or invalid
-                :raise: DremioPermissionException user does not have permission
-                :raise: DremioNotFoundException user could not be found
                 :return: users info as a dict
                 """
         return get_all_users(self._token,self._base_url  ,startIndex , count ,query , ssl_verify=self._ssl_verify)
 
     def get_privileges_of_user(self, uid, startIndex=None, count=None):
+        """
+        Fetches priviliges of a user
+        :param uid: user id
+        :param startIndex: index starting from which to fetch privileges
+        :param count: Maximum number of privileges to fetch
+        :return: result object
+        """
         return get_privileges_of_user(self._token, self._base_url, uid, startIndex, count, ssl_verify=self._ssl_verify)
 
     def user(self, uid=None, name=None):
@@ -217,16 +238,43 @@ class SimpleClient(object):
         return user(self._token, self._base_url, uid, name, ssl_verify=self._ssl_verify)
 
     def create_role(self, json):
+        """ returns the new role after creating it
+        :param json: json document for new role
+        :return: result object
+        """
         return create_role(self._token, self._base_url, json, ssl_verify=self._ssl_verify)
 
-    def get_role(self, uid=None ,name=None):
-        return get_role(self._token, self._base_url, uid, name,ssl_verify=self._ssl_verify)
+    def get_role(self, rid=None ,name=None):
+        """
+        Returns role corresponding to the the given rid or name (Atleast one of name or rid should be given)
+        :param rid: role id
+        :param name: role name
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioNotFoundException if role could not be found
+        :return: result object
+        """
+        return get_role(self._token, self._base_url, rid, name,ssl_verify=self._ssl_verify)
 
-    def delete_role(self, uid ):
-        return delete_role(self._token, self._base_url, uid,ssl_verify=self._ssl_verify)
+    def delete_role(self, rid ):
+        """
+        Deletes a role corresponding to  the given rid if it exists
+        :param rid: role id
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioNotFoundException if role could not be found
+        :return: None
+        """
+        return delete_role(self._token, self._base_url, rid,ssl_verify=self._ssl_verify)
 
-    def update_role(self, uid, json):
-        return update_role(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
+    def update_role(self, rid, json):
+        """
+        Returns role corresponding to the the given rid or name (Atleast one of name or rid should be given)
+        :param rid: role id
+        :param json: json document for updating the role
+        :raise: DremioUnauthorizedException if token is incorrect or invalid
+        :raise: DremioNotFoundException if role could not be found
+        :return: result object
+        """
+        return update_role(self._token, self._base_url, rid, json, ssl_verify=self._ssl_verify)
 
     def get_all_roles(self, startIndex=None, count=None, query=None):
         """ return all the roles
@@ -242,14 +290,34 @@ class SimpleClient(object):
                 """
         return get_all_roles(self._token, self._base_url, startIndex, count, query, ssl_verify=self._ssl_verify)
 
-    def get_members_of_role(self, uid, startIndex=None, count=None):
-        return get_members_of_role(self._token ,self._base_url,uid,startIndex,count,ssl_verify=self._ssl_verify)
+    def get_members_of_role(self, rid, startIndex=None, count=None):
+        """
+        Return members for a given role
+        :param rid: role id
+        :param startIndex:(optional) Index from which to return all members
+        :param count: (optional) maximum number of members to return
+        :return: result object
+        """
+        return get_members_of_role(self._token ,self._base_url,rid,startIndex,count,ssl_verify=self._ssl_verify)
 
-    def get_privileges_of_role(self, uid, startIndex=None, count=None):
-        return get_privileges_of_role(self._token, self._base_url, uid, startIndex, count, ssl_verify=self._ssl_verify)
+    def get_privileges_of_role(self, rid, startIndex=None, count=None):
+        """
+        Fetches the privileges for a role
+        :param rid: role id
+        :param startIndex: index starting from which to fetch privileges
+        :param count: Maximum number of priviliges to fetch
+        :return: result object
+        """
+        return get_privileges_of_role(self._token, self._base_url, rid, startIndex, count, ssl_verify=self._ssl_verify)
 
-    def update_member_of_role(self, uid, json):
-        return update_member_of_role(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
+    def update_member_of_role(self, rid, json):
+        """
+        Add/remove a member from a role
+        :param rid: role id
+        :param json: json document for member of the role
+        :return: result object
+        """
+        return update_member_of_role(self._token, self._base_url, rid, json, ssl_verify=self._ssl_verify)
 
     def group(self, gid=None, name=None):
         """ return details for a group
