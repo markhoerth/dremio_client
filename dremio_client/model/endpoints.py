@@ -307,17 +307,7 @@ def get_all_users(token, base_url ,startIndex=None , count=None ,query=None  , s
     :param ssl_verify: ignore ssl errors if false
     :return: result object
     """
-    params = dict()
-    if startIndex is not None:
-        params['startIndex'] = startIndex
-    if count is not None:
-        params['count'] = count
-    if query is not None:
-        params['query'] = query
-    end_url = base_url + "/api/v3/user"
-    qry = '&'.join("{}={}".format(k, v) for k, v in params.items())
-    if len(qry)>0:
-        end_url=end_url + '?' +qry
+    end_url = base_url + "/api/v3/user" + build_url(startIndex=startIndex , count=count ,filter=query)
     return _get(end_url, token, ssl_verify=ssl_verify)
 
 
@@ -332,15 +322,7 @@ def get_privileges_of_user(token,base_url ,uid ,startIndex=None, count=None ,ssl
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    params = dict()
-    if startIndex is not None:
-        params['startIndex'] = startIndex
-    if count is not None:
-        params['count'] = count
-    qry = '&'.join("{}={}".format(k, v) for k, v in params.items())
-    end_url=base_url + "/api/v3/user/{}/privilege".format(uid)
-    if len(qry)>0  :
-        end_url=end_url + '?' + qry
+    end_url = base_url + "/api/v3/user/{}/privilege".format(uid) + build_url(startIndex=startIndex,count=count)
     return _get(end_url, token, ssl_verify=ssl_verify)
 
 
@@ -430,17 +412,7 @@ def get_all_roles(token, base_url ,startIndex=None , count=None ,query=None  , s
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    params=dict()
-    if startIndex is not None:
-        params['startIndex']=startIndex
-    if count is not None:
-        params['count']=count
-    if query is not None:
-        params['query']=query
-    end_url=base_url + "/api/v3/role"
-    qry='&'.join("{}={}".format(k,v) for k,v in params.items())
-    if len(qry)>0:
-        end_url=end_url +'?' + qry
+    end_url=base_url + "/api/v3/role" + build_url(startIndex=startIndex,count=count,filter=query)
     return _get(end_url, token,  ssl_verify=ssl_verify)
 
 
@@ -455,15 +427,7 @@ def get_members_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_ve
     :param ssl_verify: Ignore ssl errors if False
     :return: result object
     """
-    params=dict()
-    if startIndex is not None:
-        params['startIndex']=startIndex
-    if count is not None:
-        params['count']=count
-    end_url=base_url + "/api/v3/role/{}/member".format(rid)
-    qry='&'.join("{}={}".format(k,v) for k,v in params.items())
-    if len(qry)>0 :
-        end_url = end_url +'?' + qry
+    end_url=base_url + "/api/v3/role/{}/member".format(rid) + build_url(startIndex=startIndex,count=count)
     return _get(end_url , token, ssl_verify=ssl_verify)
 
 def get_privileges_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
@@ -477,15 +441,7 @@ def get_privileges_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl
     :param ssl_verify: ignore ssl errors if False
     :return: result object
     """
-    params = dict()
-    if startIndex is not None:
-        params['startIndex'] = startIndex
-    if count is not None:
-        params['count'] = count
-    qry = '&'.join("{}={}".format(k, v) for k, v in params.items())
-    end_url = base_url + "/api/v3/role/{}/privilege".format(rid)
-    if len(qry) > 0:
-        end_url = end_url + '?' + qry
+    end_url = base_url + "/api/v3/role/{}/privilege".format(rid) + build_url(startIndex=startIndex , count=count)
     return _get(end_url, token, ssl_verify=ssl_verify)
 
 
@@ -901,3 +857,16 @@ def graph(token, base_url, cid=None, ssl_verify=True):
     if cid is None:
         raise TypeError("resource id can't be None for a graph call")
     return _get(base_url + "/api/v3/catalog/{}/graph".format(cid), token, ssl_verify=ssl_verify)
+
+
+def build_url(**kwargs):
+    """
+    returns required url string
+    :param kwargs: keyword arguments (dictionary)
+    :return:string
+    """
+    query = "&".join("{}={}".format(k,v) for k,v in kwargs.items() if v)
+    if query:
+        qry= "?{}".format(query)
+        return qry
+    return query
