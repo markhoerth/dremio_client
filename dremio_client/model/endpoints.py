@@ -418,6 +418,116 @@ def update_member_of_role(token, base_url, rid, json, ssl_verify=True):
     return _patch(base_url + "/api/v3/role/{}/member".format(rid), token, json, ssl_verify=ssl_verify)
 
 
+def create_role(token,base_url,json ,ssl_verify=True):
+    """
+    :param token: auth token
+    :param base_url: sql query
+    :param json: json document for creating new role
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    return _post(base_url + "/api/v3/role", token, json, ssl_verify=ssl_verify)
+
+
+def get_role(token, base_url, rid, name, ssl_verify=True):
+    """
+    Returns role info for a role with given id or name
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param name: role name
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    if rid is None and name is None:
+        raise TypeError("both id and name can't be None for a user call")
+    if rid is not None :
+        return _get(base_url + "/api/v3/role/{}".format(rid), token, ssl_verify=ssl_verify)
+    else:
+        return _get(base_url + "/api/v3/role/by-name/{}".format(name), token, ssl_verify=ssl_verify)
+
+
+def delete_role(token, base_url, rid , ssl_verify=True):
+    """
+    Deletes the role with a given rid
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param ssl_verify: ignore ssl errors if False
+    :return: None
+    """
+    return _delete(base_url + "/api/v3/role/{}".format(rid) , token, ssl_verify=ssl_verify)
+
+
+def update_role(token, base_url, rid, json, ssl_verify=True):
+    """
+    Returns the role after updating it
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param json: json document for role
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    return _put(base_url + "/api/v3/role/{}".format(rid), token, json, ssl_verify=ssl_verify)
+
+def get_all_roles(token, base_url ,startIndex=None , count=None ,query=None  , ssl_verify=True):
+    """
+    Fetches all the roles
+    :param token: auth token
+    :param base_url: sql query
+    :param startIndex:(optional) Index from which to start getting roles
+    :param count:(optional) maximum number of roles to fetch
+    :param query: (optional) filter roles based on this query
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    end_url=base_url + "/api/v3/role" + build_url(startIndex=startIndex,count=count,filter=query)
+    return _get(end_url, token,  ssl_verify=ssl_verify)
+
+
+def get_members_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
+    """
+    Return members of a given role
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param startIndex: Index starting from which to return members
+    :param count: Maximum number of members to return
+    :param ssl_verify: Ignore ssl errors if False
+    :return: result object
+    """
+    end_url=base_url + "/api/v3/role/{}/member".format(rid) + build_url(startIndex=startIndex,count=count)
+    return _get(end_url , token, ssl_verify=ssl_verify)
+
+def get_privileges_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
+    """
+    Fetches privileges of a given role
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param startIndex: index starting from which to fetch privileges
+    :param count: maximum number of privileges to fetch
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    end_url = base_url + "/api/v3/role/{}/privilege".format(rid) + build_url(startIndex=startIndex , count=count)
+    return _get(end_url, token, ssl_verify=ssl_verify)
+
+
+def update_member_of_role(token, base_url, rid, json, ssl_verify=True):
+    """
+    Add remove a member from a role
+    :param token: auth token
+    :param base_url: sql query
+    :param rid: role id
+    :param json: json document of role
+    :param ssl_verify: Ignore ssl errors if False
+    :return: result object
+    """
+    return _patch(base_url + "/api/v3/role/{}/member".format(rid), token, json, ssl_verify=ssl_verify)
+
+
 def group(token, base_url, gid=None, name=None, ssl_verify=True):
     """fetch a group based on id or name
 
