@@ -39,6 +39,9 @@ from .model.endpoints import (
     delete_reflection,
     get_privilege,
     get_privilege_by_grant_type,
+    get_privileges_by_grant ,
+    get_grants_of_grantee ,
+    update_grants_of_grantee,
     update_privilege,
     delete_privilege,
     graph,
@@ -64,8 +67,8 @@ from .model.endpoints import (
     wlm_queues,
     wlm_queue,
     wlm_rules,
-    get_all_users, delete_user, update_role, delete_role, get_role, create_role, get_all_roles,
-    get_members_of_role, get_privileges_of_role, get_privileges_of_user,
+    delete_user, update_role, delete_role, get_role, create_role,
+    get_privileges_of_role, get_privileges_of_user,
     update_member_of_role
 )
 from .util import refresh_metadata, run, run_async, refresh_vds_reflection_by_path, refresh_reflections_of_one_dataset
@@ -200,17 +203,7 @@ class SimpleClient(object):
         """
         return update_user(self._token, self._base_url, uid, json, ssl_verify=self._ssl_verify)
 
-    def get_all_users(self, startIndex=None , count=None ,query=None ):
-        """ return all the users
 
-                startIndex , count , and query are optional parameters
-
-                :param startIndex: returns users starting from this index
-                :param count: maximum number of users to return
-                :param query: filter based on this query
-                :return: users info as a dict
-                """
-        return get_all_users(self._token,self._base_url  ,startIndex , count ,query , ssl_verify=self._ssl_verify)
 
     def get_privileges_of_user(self, uid, startIndex=None, count=None):
         """
@@ -276,29 +269,6 @@ class SimpleClient(object):
         """
         return update_role(self._token, self._base_url, rid, json, ssl_verify=self._ssl_verify)
 
-    def get_all_roles(self, startIndex=None, count=None, query=None):
-        """ return all the roles
-
-                startIndex , count , and query are optional parameters
-
-                :param startIndex: returns roles starting from this index
-                :param count: maximum number of roles return
-                :param query: filter based on this query
-                :raise: DremioUnauthorizedException if token is incorrect or invalid
-                :raise: DremioNotFoundException role could not be found
-                :return: roles info as a dict
-                """
-        return get_all_roles(self._token, self._base_url, startIndex, count, query, ssl_verify=self._ssl_verify)
-
-    def get_members_of_role(self, rid, startIndex=None, count=None):
-        """
-        Return members for a given role
-        :param rid: role id
-        :param startIndex:(optional) Index from which to return all members
-        :param count: (optional) maximum number of members to return
-        :return: result object
-        """
-        return get_members_of_role(self._token ,self._base_url,rid,startIndex,count,ssl_verify=self._ssl_verify)
 
     def get_privileges_of_role(self, rid, startIndex=None, count=None):
         """
@@ -624,6 +594,34 @@ class SimpleClient(object):
 
     def get_privilege_by_grant_type(self, grantType):
         return get_privilege_by_grant_type(self._token, self._base_url, grantType, ssl_verify=self._ssl_verify)
+
+    def get_privileges_by_grant(self, grantType=None) :
+        """
+        Gets all available privileges for a grant
+        :param grantType: type of grant (example PROJECT)
+        :return: result object
+        """
+        return get_privileges_by_grant(self._token,self._base_url,grantType,self._ssl_verify)
+
+    def get_grants_of_grantee(self,granteeType,granteeId , grantType=None):
+        """
+        Gets grants of a particular grantee
+        :param granteeType: type of grantee (i.e user or role)
+        :param granteeId: id of grantee
+        :param grantType: type of grant       , example PROJECT (optional parameter)
+        :return: result object (no content)
+        """
+        return get_grants_of_grantee(self._token,self._base_url , granteeType , granteeId ,grantType, self._ssl_verify)
+
+    def update_grants_of_grantee(self , grantee , granteeId, json):
+        """
+        updates grants of grantee
+        :param grantee: user or role
+        :param granteeId: id of grantee
+        :param json: json document
+        :return: result object (no content if update happens successfully)
+        """
+        return update_grants_of_grantee(self._token,self._base_url ,granteeId,grantee ,json ,self._ssl_verify )
 
     def update_privilege(self, pid, json):
         return update_privilege(self._token, self._base_url, pid, json, ssl_verify=self._ssl_verify)
