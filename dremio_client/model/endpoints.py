@@ -281,7 +281,8 @@ def delete_user(token, base_url, uid ,tag , ssl_verify=True):
     :param ssl_verify: ignore ssl errors if False
     :return: None
     """
-    return _delete(base_url + "/api/v3/user/{}/version={}".format(uid,tag) , token, ssl_verify=ssl_verify)
+    parsed_tag = quote(tag, safe="")
+    return _delete(base_url + "/api/v3/user/{}?version={}".format(uid,parsed_tag) , token, ssl_verify=ssl_verify)
 
 
 def update_user(token, base_url, uid, json, ssl_verify=True):
@@ -296,19 +297,6 @@ def update_user(token, base_url, uid, json, ssl_verify=True):
     """
     return _put(base_url + "/api/v3/user/{}".format(uid), token, json, ssl_verify=ssl_verify)
 
-def get_all_users(token, base_url ,startIndex=None , count=None ,query=None  , ssl_verify=True):
-    """
-    fetch all users
-    :param token: auth token
-    :param base_url: sql query
-    :param startIndex: index starting from which to fetch users
-    :param count: Maximum number of users to fetch
-    :param query: filters users based on this query
-    :param ssl_verify: ignore ssl errors if false
-    :return: result object
-    """
-    end_url = base_url + "/api/v3/user" + build_url(startIndex=startIndex , count=count ,filter=query)
-    return _get(end_url, token, ssl_verify=ssl_verify)
 
 
 def get_privileges_of_user(token,base_url ,uid ,startIndex=None, count=None ,ssl_verify=True):
@@ -401,36 +389,9 @@ def update_role(token, base_url, rid, json, ssl_verify=True):
     """
     return _put(base_url + "/api/v3/role/{}".format(rid), token, json, ssl_verify=ssl_verify)
 
-def get_all_roles(token, base_url ,startIndex=None , count=None ,query=None  , ssl_verify=True):
-    """
-    Fetches all the roles
-    :param token: auth token
-    :param base_url: sql query
-    :param startIndex:(optional) Index from which to start getting roles
-    :param count:(optional) maximum number of roles to fetch
-    :param query: (optional) filter roles based on this query
-    :param ssl_verify: ignore ssl errors if False
-    :return: result object
-    """
-    end_url=base_url + "/api/v3/role" + build_url(startIndex=startIndex,count=count,filter=query)
-    return _get(end_url, token,  ssl_verify=ssl_verify)
 
 
-def get_members_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
-    """
-    Return members of a given role
-    :param token: auth token
-    :param base_url: sql query
-    :param rid: role id
-    :param startIndex: Index starting from which to return members
-    :param count: Maximum number of members to return
-    :param ssl_verify: Ignore ssl errors if False
-    :return: result object
-    """
-    end_url=base_url + "/api/v3/role/{}/member".format(rid) + build_url(startIndex=startIndex,count=count)
-    return _get(end_url , token, ssl_verify=ssl_verify)
-
-def get_privileges_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
+def get_privileges_of_role(token, base_url, rid, startIndex=None, count=None, ssl_verify=True):
     """
     Fetches privileges of a given role
     :param token: auth token
@@ -456,6 +417,8 @@ def update_member_of_role(token, base_url, rid, json, ssl_verify=True):
     :return: result object
     """
     return _patch(base_url + "/api/v3/role/{}/member".format(rid), token, json, ssl_verify=ssl_verify)
+
+
 
 
 def group(token, base_url, gid=None, name=None, ssl_verify=True):
@@ -809,6 +772,53 @@ def get_privilege_by_grant_type(token, base_url, grantType="", ssl_verify=True):
     if grantType == "":
         raise TypeError("resource grantType can't be empty for a privilege call")
     return _get(base_url + "/api/v3/catalog/privileges?type={}".format(grantType), token, ssl_verify=ssl_verify)
+
+def get_privileges_by_grant(token , base_url ,grantType=None ,ssl_verify=True):
+    """
+    Gets all available privileges for a grant (This api isn't implemented as of now)
+    :param token: auth token
+    :param base_url: sql query
+    :param grantType: optional parameter type of grant (example PROJECT)
+    :param ssl_verify: Ignore  ssl errors if False
+    :return: result object
+    """
+    if grantType:
+        end_url=base_url + "/api/v3/grant?grantType={}".format(grantType)
+    else :
+        end_url =base_url + "/api/v3/grant"
+    return _get(end_url ,token,ssl_verify=ssl_verify)
+
+
+def get_grants_of_grantee(token, base_url ,granteeType ,granteeId,grantType=None , ssl_verify=True):
+    """
+    Gets all grants of a specific grantee
+    :param token: auth token
+    :param base_url: sql query
+    :param granteeType: type of grantee (user or role)
+    :param granteeId: id of grantee
+    :param grantType: type of grant (example PROJECT)
+    :param ssl_verify: ignore ssl errors if False
+    :return: result object
+    """
+    if grantType:
+        end_url=base_url + "/api/v3/grant/{}/{}?grantType={}".format(granteeType,granteeId,grantType)
+    else :
+        end_url=base_url + "/api/v3/grant/{}/{}".format(granteeType,granteeId)
+    return _get(end_url, token,ssl_verify=ssl_verify)
+
+
+def update_grants_of_grantee(token, base_url, granteeId , grantee ,json,ssl_verify=True):
+    """
+    Updates grants of a particular grantee
+    :param token: auth token
+    :param base_url: sql query
+    :param granteeId:id of grantee (should match with one in json)
+    :param grantee :user or role
+    :param json: json document for updation (id must match with one in url)
+    :param ssl_verify: Ignore ssl errors if False
+    :return: result object
+    """
+    return _put(base_url+ "/api/v3/grant/{}/{}".format(grantee,granteeId) , token, json , ssl_verify=ssl_verify)
 
 
 def update_privilege(token, base_url, pid, json, ssl_verify=True):
