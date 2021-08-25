@@ -390,7 +390,8 @@ def update_role(token, base_url, rid, json, ssl_verify=True):
     return _put(base_url + "/api/v3/role/{}".format(rid), token, json, ssl_verify=ssl_verify)
 
 
-def get_privileges_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
+
+def get_privileges_of_role(token, base_url, rid, startIndex=None, count=None, ssl_verify=True):
     """
     Fetches privileges of a given role
     :param token: auth token
@@ -416,60 +417,6 @@ def update_member_of_role(token, base_url, rid, json, ssl_verify=True):
     :return: result object
     """
     return _patch(base_url + "/api/v3/role/{}/member".format(rid), token, json, ssl_verify=ssl_verify)
-
-
-
-
-
-
-
-
-
-
-
-
-def get_all_roles(token, base_url ,startIndex=None , count=None ,query=None  , ssl_verify=True):
-    """
-    Fetches all the roles
-    :param token: auth token
-    :param base_url: sql query
-    :param startIndex:(optional) Index from which to start getting roles
-    :param count:(optional) maximum number of roles to fetch
-    :param query: (optional) filter roles based on this query
-    :param ssl_verify: ignore ssl errors if False
-    :return: result object
-    """
-    end_url=base_url + "/api/v3/role" + build_url(startIndex=startIndex,count=count,filter=query)
-    return _get(end_url, token,  ssl_verify=ssl_verify)
-
-
-def get_members_of_role(token,base_url ,rid ,startIndex=None, count=None ,ssl_verify=True):
-    """
-    Return members of a given role
-    :param token: auth token
-    :param base_url: sql query
-    :param rid: role id
-    :param startIndex: Index starting from which to return members
-    :param count: Maximum number of members to return
-    :param ssl_verify: Ignore ssl errors if False
-    :return: result object
-    """
-    end_url=base_url + "/api/v3/role/{}/member".format(rid) + build_url(startIndex=startIndex,count=count)
-    return _get(end_url , token, ssl_verify=ssl_verify)
-
-
-    """
-    Fetches privileges of a given role
-    :param token: auth token
-    :param base_url: sql query
-    :param rid: role id
-    :param startIndex: index starting from which to fetch privileges
-    :param count: maximum number of privileges to fetch
-    :param ssl_verify: ignore ssl errors if False
-    :return: result object
-    """
-    end_url = base_url + "/api/v3/role/{}/privilege".format(rid) + build_url(startIndex=startIndex , count=count)
-    return _get(end_url, token, ssl_verify=ssl_verify)
 
 
 
