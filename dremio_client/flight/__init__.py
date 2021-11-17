@@ -26,6 +26,44 @@ try:
     import pyarrow as pa
     from pyarrow import flight
     from .flight_auth import HttpDremioClientAuthHandler
+    
+    
+    class DremioClientAuthMiddleware(flight.ClientMiddleware):
+        """
+        A ClientMiddleware that extracts the bearer token from
+        the authorization header returned by the Dremio
+        Flight Server Endpoint.
+        Parameters
+        ----------
+        factory : ClientHeaderAuthMiddlewareFactory
+            The factory to set call credentials if an
+            authorization header with bearer token is
+            returned by the Dremio server.
+        """
+
+        def __init__(self, factory):
+            self.factory = factory
+
+        def received_headers(self, headers):
+            auth_header_key = 'authorization'
+            authorization_header = []
+            for key in headers:
+                if key.lower() == auth_header_key:
+                    authorization_header = headers.get(auth_header_key)
+            self.factory.set_call_credential([
+                b'authorization', authorization_header[0].encode("utf-8")])
+
+    class DremioClientAuthMiddlewareFactory(flight.ClientMiddlewareFactory):
+        """A factory that creates DremioClientAuthMiddleware(s)."""
+
+        def __init__(self):
+            self.call_credential = []
+
+        def start_call(self, info):
+            return DremioClientAuthMiddleware(self)
+
+        def set_call_credential(self, call_credential):
+            self.call_credential = call_credential
 
     def connect(
         hostname="localhost", port=47470, username="dremio", password="dremio123", tls_root_certs_filename=None
@@ -40,17 +78,34 @@ try:
         :param tls_root_certs_filename: use ssl to connect with root certs from filename
         :return: arrow flight client
         """
+        
+        scheme = "grpc+tcp"
+        connection_args = {}
+        
         if tls_root_certs_filename:
             with open(tls_root_certs_filename) as f:
-                tls_root_certs = f.read()
-            location = "grpc+tls://{}:{}".format(hostname, port)
-            c = flight.FlightClient(location, tls_root_certs=tls_root_certs)
+                connection_args["tls_root_certs"] = root_certs.read()
+            scheme = "grpc+tls"
         else:
-            location = "grpc+tcp://{}:{}".format(hostname, port)
-            c = flight.FlightClient(location)
+            # use default unencrypted TCP connection
+            pass
+        
+        # Two WLM settings can be provided upon initial authentication
+        # with the Dremio Server Flight Endpoint:
+        # - routing-tag
+        # - routing queue
+        
+        initial_options = flight.FlightCallOptions(headers=[
+            (b'routing-tag', b'test-routing-tag'),
+            (b'routing-queue', b'Low Cost User Queries')
+        ])
+        client_auth_middleware = DremioClientAuthMiddlewareFactory()
+        client = flight.FlightClient("{}://{}:{}".format(scheme, hostname, port),
+                                     middleware=[client_auth_middleware], **connection_args)
+        
         if username:
-            c.authenticate(HttpDremioClientAuthHandler(username, password if password else ""))
-        return c
+            client.authenticate_basic_token(username, password, initial_options)
+        return client
 
     def query(
         sql,
