@@ -83,7 +83,7 @@ try:
         connection_args = {}
         
         if tls_root_certs_filename:
-            with open(tls_root_certs_filename) as f:
+            with open(tls_root_certs_filename) as root_certs:
                 connection_args["tls_root_certs"] = root_certs.read()
             scheme = "grpc+tls"
         else:
