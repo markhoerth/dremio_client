@@ -66,7 +66,7 @@ try:
             self.call_credential = call_credential
 
     def connect(
-        hostname="localhost", port=47470, username="dremio", password="dremio123", tls_root_certs_filename=None
+        hostname="localhost", port=32010, username="dremio", password="dremio123", tls_root_certs_filename=None
     ):
         """
         Connect to and authenticate against Dremio's arrow flight server. Auth is skipped if username is None
