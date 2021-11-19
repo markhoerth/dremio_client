@@ -22,6 +22,8 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+import base64
+
 try:
     import pyarrow as pa
     from pyarrow import flight
@@ -95,17 +97,19 @@ try:
         # - routing-tag
         # - routing queue
         
-        initial_options = flight.FlightCallOptions(headers=[
-            (b'routing-tag', b'test-routing-tag'),
-            (b'routing-queue', b'Low Cost User Queries')
-        ])
         client_auth_middleware = DremioClientAuthMiddlewareFactory()
         client = flight.FlightClient("{}://{}:{}".format(scheme, hostname, port),
                                      middleware=[client_auth_middleware], **connection_args)
         
-        if username:
-            client.authenticate_basic_token(username, password, initial_options)
-        return client
+        if username and password:
+            encoded_credentials = base64.b64encode(b'' + username.encode() + b':' + password.encode())
+            initial_options = flight.FlightCallOptions(headers=[
+                (b'authorization', b'Basic ' + encoded_credentials),
+                (b'routing-tag', b'test-routing-tag'),
+                (b'routing-queue', b'Low Cost User Queries')
+            ])
+#             client.authenticate_basic_token(username, password, initial_options)
+        return initial_options, client
 
     def query(
         sql,
@@ -133,10 +137,10 @@ try:
         :return:
         """
         if not client:
-            client = connect(hostname, port, username, password, tls_root_certs_filename)
+            call_options, client = connect(hostname, port, username, password, tls_root_certs_filename)
 
-        info = client.get_flight_info(flight.FlightDescriptor.for_command(sql))
-        reader = client.do_get(info.endpoints[0].ticket)
+        info = client.get_flight_info(flight.FlightDescriptor.for_command(sql), call_options)
+        reader = client.do_get(info.endpoints[0].ticket, call_options)
         batches = []
         while True:
             try:
