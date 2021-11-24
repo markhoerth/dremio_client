@@ -104,9 +104,7 @@ try:
         if username and password:
             encoded_credentials = base64.b64encode(b'' + username.encode() + b':' + password.encode())
             initial_options = flight.FlightCallOptions(headers=[
-                (b'authorization', b'Basic ' + encoded_credentials),
-                (b'routing-tag', b'test-routing-tag'),
-                (b'routing-queue', b'Low Cost User Queries')
+                (b'authorization', b'Basic ' + encoded_credentials)
             ])
 #             client.authenticate_basic_token(username, password, initial_options)
         return initial_options, client
