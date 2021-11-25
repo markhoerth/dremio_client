@@ -78,7 +78,7 @@ def _existing_token(config_dict):
 
 def _is_valid(authfile, config_dict):
     hostname = authfile["hostname"]
-    username = authfile["username"]
+    username = authfile["user"]
     try:
         expected_hostname = config_dict["hostname"].get()
         expected_username = config_dict["auth"]["username"].get()
