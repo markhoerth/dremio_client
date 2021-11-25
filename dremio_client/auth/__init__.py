@@ -57,7 +57,7 @@ def _write_token(token, config_dict):
                         "token": token,
                         "timestamp": time.time(),
                         "hostname": config_dict["hostname"].get(),
-                        "user": config_dict["auth"]["username"].get(),
+                        "username": config_dict["auth"]["username"].get(),
                     },
                     f,
                 )
