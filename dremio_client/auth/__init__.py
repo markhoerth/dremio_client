@@ -57,7 +57,7 @@ def _write_token(token, config_dict):
                         "token": token,
                         "timestamp": time.time(),
                         "hostname": config_dict["hostname"].get(),
-                        "user": config_dict["auth"]["username"].get(),
+                        "username": config_dict["auth"]["username"].get(),
                     },
                     f,
                 )
@@ -78,7 +78,7 @@ def _existing_token(config_dict):
 
 def _is_valid(authfile, config_dict):
     hostname = authfile["hostname"]
-    username = authfile["user"]
+    username = authfile["username"]
     try:
         expected_hostname = config_dict["hostname"].get()
         expected_username = config_dict["auth"]["username"].get()
