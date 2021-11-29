@@ -10,4 +10,4 @@ verify: true
 odbc:
     port: 31010
 flight:
-    port: 47470
+    port: 32010
