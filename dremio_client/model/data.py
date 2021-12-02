@@ -484,7 +484,7 @@ class Catalog(dict):
             value = dict.__getitem__(self, item)
             if value is None:
                 raise KeyError()
-            if isinstance(value, Catalog) and value["_base_url"] is None:
+            if isinstance(value, Catalog) and "_base_url" not in value:
                 raise KeyError()
             return value
         except KeyError:
