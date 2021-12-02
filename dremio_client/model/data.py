@@ -485,7 +485,7 @@ class Catalog(dict):
             if value is None:
                 raise KeyError()
             if isinstance(value, Catalog) and "_base_url" not in value:
-                raise KeyError()
+                raise KeyError("_base_url")
             return value
         except KeyError:
             self.__dir__()
