@@ -33,11 +33,14 @@ you through the process.
 Conda release
 -------------
 
-You can use conda to install Dremio Client by doing:
+You can use ``conda`` to install Dremio Client with full deps as follows:
 
 .. code-block:: console
 
-    $ conda install dremio_client -c rymurr -c conda-forge
+    $ conda install python-dremio-client -c conda-forge
+
+package feedstock in conda-forge: https://github.com/conda-forge/python-dremio-client-feedstock
+package page in anaconda: https://anaconda.org/conda-forge/python-dremio-client
 
 From sources
 ------------
