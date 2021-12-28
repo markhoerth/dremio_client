@@ -1,4 +1,4 @@
-attrs==21.2.0
+attrs==21.3.0
 Click>=6.0
 confuse==1.4.0
 requests>=2.21.0
