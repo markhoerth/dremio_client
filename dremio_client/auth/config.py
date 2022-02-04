@@ -48,5 +48,5 @@ def login(base_url, config_dict):
     try:
         verify = config_dict["verify"].get(bool)
     except NotFoundError:
-        verify = 10
+        verify = True
     return _login(base_url, username, password, timeout, verify)
