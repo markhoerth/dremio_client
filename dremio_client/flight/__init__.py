@@ -146,11 +146,9 @@ try:
                 batches.append(batch)
             except StopIteration:
                 break
-        data = pa.Table.from_batches(batches)
-        if pandas:
-            return data.to_pandas()
-        else:
-            return data
+        table = pa.Table.from_batches(batches)
+        
+        return table
 
 
 except ImportError:
