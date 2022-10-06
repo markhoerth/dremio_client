@@ -5,4 +5,4 @@ confuse==1.4.0
 pyarrow>=0.15.0
 requests-futures==1.0.0
 requests>=2.21.0
-simplejson==3.17.3
+simplejson==3.17.6
